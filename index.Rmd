@@ -46,21 +46,21 @@ You will have the time and opportunity to independently develop skills particula
 # Contact time
 There is one lecture, seven workshops and several drop-ins for the assessment project.
 
-Lecture 1 [google slides](https://docs.google.com/presentation/d/14sedkBZDdOSzJlxX101I2_p8xEmNgJjkHpWM6MKvSJo/edit?usp=sharing), [pdf slides](`r here::here("L1_Introduction_to_Data Science")`)
+Lecture 1 [google slides](https://docs.google.com/presentation/d/14sedkBZDdOSzJlxX101I2_p8xEmNgJjkHpWM6MKvSJo/edit?usp=sharing), [pdf slides](`r here::here("L1_Introduction_to_Data Science.pdf")`)
 
-Workshop 1: [Project Organisation.](`r here::here("workshops", "01_project_organisation")`)
+Workshop 1: [Project Organisation.](`r here::here("workshops", "01_project_organisation.html")`)
 
-Workshop 2: [Tidying data and the tidyverse.](`r here::here("workshops", "01_project_organisation")`)
+Workshop 2: [Tidying data and the tidyverse.](`r here::here("workshops", "01_project_organisation.html")`)
 
-Workshop 3: [Advanced Data Import.](`r here::here("workshops", "01_project_organisation")`)
+Workshop 3: [Advanced Data Import.](`r here::here("workshops", "01_project_organisation.html")`)
 
-Workshop 4: [Reproducibility and an introduction to R Markdown.](`r here::here("workshops", "01_project_organisation")`)
+Workshop 4: [Reproducibility and an introduction to R Markdown.](`r here::here("workshops", "01_project_organisation.html")`)
 
-Workshop 5: [Advanced R Markdown.](`r here::here("workshops", "01_project_organisation")`)
+Workshop 5: [Advanced R Markdown.](`r here::here("workshops", "01_project_organisation.html")`)
 
-Workshop 6: [An introduction to Machine Learning.](`r here::here("workshops", "01_project_organisation")`)
+Workshop 6: [An introduction to Machine Learning.](`r here::here("workshops", "01_project_organisation.html")`)
 
-Workshop 7: [Project work](`r here::here("workshops", "01_project_organisation")`)
+Workshop 7: [Project work](`r here::here("workshops", "01_project_organisation.html")`)
 
 
 ![](`r here::here("pics", "58M.png")`)
