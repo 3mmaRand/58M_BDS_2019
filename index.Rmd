@@ -1,0 +1,48 @@
+---
+title: "Biological Data Science Overview"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+![](`r here::here("pics", "58M.png")`)
+
+# Aims and Learning Outcomes
+
+The aim of 58M overall is to enable you to to develop skills in some specific types of ‘data analysis’ by providing supported practice in workshops and opportunities to apply them independently in ‘projects’. This will help you become independent researchers and highly employable.
+
+At the end of this module the successful student will be able to:
+
+1. Demonstrate the acquisition of skills in experimental design and data analysis, related to the option chosen within the module.  
+2. Apply the skills learned to address novel bioscience problems.  
+
+For this option, this means:
+1. Devise reproducible strategies to import, tidy, transform, model and report on data in R.
+2. Apply the skills learned in 1. to address bioscience problems.
+
+# Introduction
+
+This series of workshops is designed 
+
+Assessment is a reproducible data analysis due at the end of the Autumn term.
+
+# Topics covered
+
+Impossible to cover everything to you might ever need!
+
+Different people will use different methods and tools.
+
+Chosen topics are: foundational, follow stages 1 and 2 well, widely applicable (in this module and beyond), transferable conceptually:
+
+*  
+* 
+
+You will have the time and opportunity to independently develop skills particular to your interests and the assessment undertaken with support.
+
+
+# Contact time
+There is one lecture, seven workshops and several drop-ins for the assessment project.
+
+
+![](`r here::here("pics", "58M.png")`)

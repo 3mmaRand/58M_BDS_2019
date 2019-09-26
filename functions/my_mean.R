@@ -1,0 +1,1 @@
+my_mean <- function(v) {sum(v) / length(v)}

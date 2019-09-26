@@ -1604,7 +1604,8 @@ div.tocify {
 <div id="project-organisation" class="section level2">
 <h2>Project Organisation</h2>
 <p>Project: a discrete piece of work which may have a number of files associated with it such as data, several scripts for analysis or production of the output (application, report etc).</p>
-<p>Directory structure</p>
+<div id="directory-structure" class="section level3">
+<h3>Directory structure</h3>
 <ul>
 <li>directory just means folder<br />
 </li>
@@ -1620,48 +1621,133 @@ div.tocify {
        |--raw  
        |--processed  
     |--analysis  
-       | 
+       |--main   
        |--accessory  
     |--figures  
 </code></pre>
-<p>Paths</p>
+</div>
+</div>
+<div id="paths" class="section level2">
+<h2>Paths</h2>
+<p>The location of a filesystem object (i.e., file, directory or link) .</p>
 <ul>
-<li>the location of a filesystem object (i.e., file, directory or link)<br />
-</li>
-<li>Absolute path or Full path: from the root directory of the object<br />
-</li>
+<li><em>Absolute</em> path or <em>full</em> path: from the root directory of the object, for examples:
+<ul>
 <li>windows: M:/web/58M_BDS_2019/data/beewing.txt<br />
 </li>
 <li>unix systems: /users/er13/web/58M_BDS_2019/data/beewing.txt<br />
 </li>
 <li>web: <a href="http://www-users.york.ac.uk/~er13/58M_BDS_2019/data/beewing.txt" class="uri">http://www-users.york.ac.uk/~er13/58M_BDS_2019/data/beewing.txt</a><br />
 </li>
-<li></li>
-<li></li>
+</ul></li>
+<li><em>Relative</em> path: the location of a filesystem object relative to the working directory, for examples:
+<ul>
+<li>in the working directory (wd): beewing.txt<br />
+</li>
+<li>in directory above the wd: ../beewing.txt<br />
+</li>
+<li>in a directory called ‘data’ in the wd: data/beewing.txt<br />
+</li>
+<li>in the directory above the wd: ../beewing.txt</li>
+<li>in a directory called ‘data’ in the directory above the wd: ../data/beewing.txt</li>
+</ul></li>
 </ul>
+<p>Useful orientation commands:</p>
+<ul>
+<li><code>getwd()</code> prints your working directory (where you are).<br />
+</li>
+<li><code>dir()</code> lists the file contents of your working directory.</li>
+</ul>
+<p>There is a very useful way round having to think about path issues too much: using the <code>here</code> package. the <code>here()</code> function in the <code>here</code> package returns the top level directory of the RStudio project. We will discuss this below.</p>
 </div>
 <div id="using-rstudio-projects" class="section level2">
 <h2>Using RStudio projects</h2>
-<p>An RStudio project is associated with a directory.</p>
+<p>An <a href="https://support.rstudio.com/hc/en-us/articles/200526207-Using-Projects">RStudio project</a> is associated with a directory.</p>
 <p>You create a new project with File | New Project…</p>
-<ul>
-<li>what that means for the paths</li>
-</ul>
+<p>When a new project is created RStudio:</p>
+<ol style="list-style-type: decimal">
+<li>Creates a project file (with an .Rproj extension) within the project directory. This file contains various project options.<br />
+</li>
+<li>Creates a hidden directory (named .Rproj.user) where project-specific temporary files (e.g. auto-saved source documents, window-state, etc.) are stored.<br />
+</li>
+<li>Loads the project into RStudio and display its name in the Projects toolbar (far right on the menu bar).</li>
+</ol>
+<p>Using a project helps you manage file paths. The working directory is the project directory (i.e., the location of the .Rproj file).</p>
+<p>You can open a project with:</p>
+<ol style="list-style-type: decimal">
+<li>File | Open Project or File | Recent Projects<br />
+</li>
+<li>Double-clicking the .Rproj file<br />
+</li>
+<li>Using the option on the far right of the tool bar</li>
+</ol>
+<p>When you open project, a new R session starts and various settings are restored to their condition when the project was closed.</p>
+<p>Suggested reading <a href="https://whattheyforgot.org/project-oriented-workflow.html">Chapter 2 Project-oriented workflow</a> of What they forgot to teach you about R <span class="citation">(Bryan and Hester, n.d.)</span>.</p>
+</div>
+<div id="here" class="section level2">
+<h2><code>here()</code></h2>
+<p>If you are not working with a Project, the <code>here()</code> function in the <code>here</code> package returns the working directory when the package was loaded.</p>
+<pre class="r"><code>here::here()</code></pre>
+<pre><code>## [1] &quot;M:/web/58M_BDS_2019&quot;</code></pre>
+<p>The colon notation <code>packagename::functionname()</code> is an alternative to first using <code>library(packagename)</code> then <code>functionname()</code>. It’s useful when you only want to use a package a few times in a session or when you’ve loaded two packages which has functions with the same name and you want to specify which package should be used.</p>
+<p><code>here()</code> can be used to build paths in a way that will transport to other systems, i.e., it’s an alternative to typing the relative paths.</p>
+<p>For example, if I want to read <a href="M:/web/58M_BDS_2019/data/beewing.txt">beewing.txt</a> (which are left wing widths of 100 honey bees in mm) in:</p>
+<pre class="r"><code># the code to help you understand how it works is included
+# what is the wd
+here::here()</code></pre>
+<pre><code>## [1] &quot;M:/web/58M_BDS_2019&quot;</code></pre>
+<pre class="r"><code># what is in the wd
+dir(here::here())</code></pre>
+<pre><code>##  [1] &quot;58M_BDS_2019.Rproj&quot; &quot;data&quot;               &quot;figs&quot;              
+##  [4] &quot;functions&quot;          &quot;index.html&quot;         &quot;index.Rmd&quot;         
+##  [7] &quot;pics&quot;               &quot;README.md&quot;          &quot;refs&quot;              
+## [10] &quot;workshops&quot;</code></pre>
+<pre class="r"><code># what is in the data folder in the the wd
+dir(here::here(&quot;data&quot;))</code></pre>
+<pre><code>## [1] &quot;beewing.txt&quot; &quot;chaff.txt&quot;   &quot;processed&quot;</code></pre>
+<pre class="r"><code># build the path to the file. 
+file &lt;- here::here(&quot;data&quot;, &quot;beewing.txt&quot;)
+# what&#39;s in file
+file</code></pre>
+<pre><code>## [1] &quot;M:/web/58M_BDS_2019/data/beewing.txt&quot;</code></pre>
+<pre class="r"><code># note that it builds the path you request, data/beewing.txt, even if it doesn&#39;t exist
+# for example
+nonsense &lt;- here::here(&quot;bob&quot;, &quot;sue&quot;, &quot;banana.txt&quot;)
+nonsense</code></pre>
+<pre><code>## [1] &quot;M:/web/58M_BDS_2019/bob/sue/banana.txt&quot;</code></pre>
+<pre class="r"><code># read the file in
+bee &lt;- read.table(file, header = TRUE)
+str(bee)</code></pre>
+<pre><code>## &#39;data.frame&#39;:    100 obs. of  1 variable:
+##  $ wing: num  3.6 3.7 3.8 3.8 4 4 4 4 4.1 4.1 ...</code></pre>
+<p>When working in a Project, <code>here::here()</code> returns the top level directory of the RStudio project. This will be the directory with the same name as the .RProj file in which that file is located.</p>
 </div>
 <div id="writing-files" class="section level2">
 <h2>Writing files</h2>
+<p>Often we want to write to files. My main reasons for doing so are to save copies of data that have been processed and to save graphics</p>
+<p>To write a dataframe to a plain text file:</p>
+<pre class="r"><code># in this case I will just write the bee data frame to another file
+# in a folder I have already (called processed)
+file &lt;- here::here(&quot;data&quot;, &quot;processed&quot;, &quot;bee2.txt&quot;)
+write.table(bee, file)</code></pre>
+<p>To create and save a ggplot:</p>
+<pre class="r"><code>ggplot(data = bee, aes(x = wing)) +
+  geom_density() +
+  theme_classic()</code></pre>
+<p><img src="data:image/png;base64,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" width="672" /></p>
+<pre class="r"><code>file &lt;- here::here(&quot;figs&quot;, &quot;beehist.png&quot;)
+ggsave(file)</code></pre>
+<div id="writing-functions" class="section level3">
+<h3>Writing functions</h3>
+<p>Imagine there is no inbuilt function to calculate the mean. We will write our own function to calculate it to demonstrate the principle of function writing on a simple example.</p>
 <ul>
-<li>why</li>
-<li>processed_data</li>
-<li>figures</li>
+<li>Save a copy of <a href="M:/web/58M_BDS_2019/data/beewing.txt">beewing.txt</a>, read it in and check the structure</li>
 </ul>
-</div>
-<div id="an-introduction-to-writing-functions" class="section level2">
-<h2>An introduction to writing functions</h2>
-<p>Imagine there is no inbuilt function to calculate the mean. We are going to write our own function to calculate the mean to demonstrate the principle of function writing on a simple example. We will use data in <a href="../data/beewing.txt">beewing.txt</a> which are left wing widths of 100 honey bees (mm)</p>
-<ul>
-<li>Save a copy, read it in and check the structure</li>
-</ul>
+<pre class="r"><code>file &lt;- here::here(&quot;data&quot;, &quot;beewing.txt&quot;)
+bee &lt;- read.table(file, header = TRUE)
+str(bee)</code></pre>
+<pre><code>## &#39;data.frame&#39;:    100 obs. of  1 variable:
+##  $ wing: num  3.6 3.7 3.8 3.8 4 4 4 4 4.1 4.1 ...</code></pre>
 <p>If you were to calculate the mean bee wing width by hand you would sum all the values in bee$wing and divide by the total number of values. R makes this easy because it calculates things ‘elementwise’, i.e., it applies an operation to every element of a vector so that:</p>
 <pre class="r"><code>sum(bee$wing)</code></pre>
 <pre><code>## [1] 455</code></pre>
@@ -1670,24 +1756,30 @@ div.tocify {
 <p>We need to divide that sum by the length of the vector to get the mean:</p>
 <pre class="r"><code>sum(bee$wing) / length(bee$wing)</code></pre>
 <pre><code>## [1] 4.55</code></pre>
-<p>One of the reasons R is so useful is that you can name your functions for future use. A function is defined by an assignment of the form:</p>
+<p>We can create a function for future use. A function is defined by an assignment of the form:</p>
 <blockquote>
 <p><code>functionname &lt;- function(arg1, arg2, ...) {expression}</code></p>
 </blockquote>
 <p>The {expression} is any R code that uses the arguments (arg1 etc) to calculate a value. In our case, we will have just one argument, the vector of values, and our expression will be that needed to calculate the mean.</p>
-<pre class="r"><code>mymean &lt;- function(v) {sum(v) / length(v)}</code></pre>
+<pre class="r"><code>my_mean &lt;- function(v) {sum(v) / length(v)}</code></pre>
 <p>I chose <code>v</code>, as a name, arbitrarily. It doesn’t matter what you call it (and it only exists inside the function when the function is called). All that matters is that the function expression describes what the function should do with the arguments passed. To call the function:</p>
-<pre class="r"><code>mymean(bee$wing)</code></pre>
+<pre class="r"><code>my_mean(bee$wing)</code></pre>
 <pre><code>## [1] 4.55</code></pre>
 <p>Functions are useful because they generalise a process thus making it reproducible without copying and pasting.</p>
+<p>Rather than having your function code in your main analysis code file, it is good practice to put it in it’s own file and ‘source’ it from your main file. Sourcing a file makes any functions it contains available. Typically you save one function in a script with the same name as the function.</p>
+<p>To ‘source’ a file called my_mean.R use:</p>
+<pre class="r"><code>file &lt;- here::here(&quot;functions&quot;, &quot;my_mean.R&quot;)
+source(file)</code></pre>
+<p>You call the function in the same way as normal.</p>
+</div>
 </div>
 </div>
 <div id="exercise" class="section level1">
 <h1>Exercise</h1>
-<p>The data in <a href="data/chaff.txt">chaff.txt</a> are the masses of male and female chaffinches. It is organised in to two columns, <code>males</code> and <code>females</code> a format which is not normally ideal. Your task is to organise the analysis of these data.<br />
+<p>The data in <a href="../data/chaff.txt">chaff.txt</a> are the masses of male and female chaffinches. It is organised in to two columns, <code>males</code> and <code>females</code> a format which is not normally ideal. Your task is to organise the analysis of these data.<br />
 You need to:</p>
 <ul>
-<li>set up an appropriate directory structure and decide on some naming and style elements that you will use consistently.</li>
+<li>use an Rstudio Project, set up an appropriate directory structure and decide on some naming and style elements that you will use consistently.</li>
 <li>read in the data.<br />
 </li>
 <li>reformat the data into ‘tidy’ form, i.e., one column giving the sex, another giving the mass. Write the newly formatted data to a file.<br />
@@ -1713,9 +1805,32 @@ Put the code for the function in its own script and call it from your main scrip
 </div>
 <div id="the-rmd-file" class="section level1">
 <h1>The Rmd file</h1>
-<p>Answers can be found where there are labels which say <code>#---SUGGESTED ANSWER---</code></p>
-<p><a href="01_project_organisation.Rmd">Rmd file</a></p>
+<p><a href="M:/web/58M_BDS_2019/workshops/01_project_organisation.Rmd">Rmd file</a></p>
+</div>
+<div id="packages" class="section level1">
+<h1>Packages</h1>
+<ul>
+<li>R <span class="citation">(R Core Team 2018)</span><br />
+</li>
+<li>tidyverse <span class="citation">(Wickham 2017)</span><br />
+</li>
+<li>here <span class="citation">(Müller 2017)</span></li>
+</ul>
 <p><img src="data:image/png;base64,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" /></p>
+<div id="refs" class="references">
+<div id="ref-Bryan-Hester">
+<p>Bryan, Jennifer, and Jim Hester. n.d. “Chapter 2 Project-Oriented Workflow | What They Forgot to Teach You About R.” <a href="https://whattheyforgot.org/project-oriented-workflow.html">https://whattheyforgot.org/project-oriented-workflow.html</a>.</p>
+</div>
+<div id="ref-R-here">
+<p>Müller, Kirill. 2017. <em>Here: A Simpler Way to Find Your Files</em>. <a href="https://CRAN.R-project.org/package=here">https://CRAN.R-project.org/package=here</a>.</p>
+</div>
+<div id="ref-R-base">
+<p>R Core Team. 2018. <em>R: A Language and Environment for Statistical Computing</em>. Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org/">https://www.R-project.org/</a>.</p>
+</div>
+<div id="ref-R-tidyverse">
+<p>Wickham, Hadley. 2017. <em>Tidyverse: Easily Install and Load the ’Tidyverse’</em>. <a href="https://CRAN.R-project.org/package=tidyverse">https://CRAN.R-project.org/package=tidyverse</a>.</p>
+</div>
+</div>
 </div>
 
 

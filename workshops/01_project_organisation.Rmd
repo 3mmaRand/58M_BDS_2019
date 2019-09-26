@@ -1,0 +1,256 @@
+---
+title: "Workshop 1: Project Organisation"
+author: "Emma Rand"
+output:
+  html_document:
+    toc: true
+    depth: 3
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    theme: spacelab
+  word_document: default
+bibliography: '`r here::here("refs", "references.bib")`'
+---
+
+
+![](`r here::here("pics", "58M.png")`)
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      message = FALSE,
+                      warning = FALSE)
+```
+
+```{r pkgs, include=FALSE}
+library(tidyverse)
+
+```
+
+
+# Introduction
+
+## Aims
+
+
+## Learning outcomes 
+
+The successful student will be able to:
+
+* use RStudio projects to appropriately organise a piece of work  
+* write code with relative paths given appropriate to your organisation  
+* create user-defined functions and call them  
+* write plain text and image files  
+* give an overview of their assessment project  
+
+# Topics
+
+## Project Organisation
+Project: a discrete piece of work which may have a number of files associated with it such as data, several scripts for analysis or production of the output (application, report etc).
+
+### Directory structure  
+
+* directory just means folder  
+* top level is named for the project  
+* contains separate directories to organise your work  
+* develop a style: e.g., consistent folder names between projects, lower case, snake_case  
+
+<pre><code>
+|--stem_cell_proteomics  
+    |--data  
+       |--raw  
+       |--processed  
+    |--analysis  
+       |--main   
+       |--accessory  
+    |--figures  
+</code></pre> 
+
+
+## Paths 
+
+The location of a filesystem object (i.e., file, directory or link) .
+
+* *Absolute* path or *full* path: from the root directory of the object, for examples:  
+  * windows: M:/web/58M_BDS_2019/data/beewing.txt  
+  * unix systems: /users/er13/web/58M_BDS_2019/data/beewing.txt  
+  * web: http://www-users.york.ac.uk/~er13/58M_BDS_2019/data/beewing.txt  
+* *Relative* path: the location of a filesystem object relative to the working directory, for examples:  
+  * in the working directory (wd):  beewing.txt  
+  * in directory above the wd: ../beewing.txt  
+  * in a directory called 'data' in the wd: data/beewing.txt  
+  * in the directory above the wd: ../beewing.txt
+  * in a directory called 'data' in the directory above the wd: ../data/beewing.txt  
+
+Useful orientation commands:  
+
+* `getwd()` prints your working directory (where you are).  
+* `dir()` lists the file contents of your working directory.   
+
+There is a very useful way round having to think about path issues too much: using the `here` package. the `here()` function in the `here` package returns the top level directory of the RStudio project. We will discuss this below.
+
+
+## Using RStudio projects
+
+An [RStudio project](https://support.rstudio.com/hc/en-us/articles/200526207-Using-Projects) is associated with a directory. 
+
+You create a new project with File | New Project...
+
+When a new project is created RStudio:
+
+1. Creates a project file (with an .Rproj extension) within the project directory. This file contains various project options.  
+2. Creates a hidden directory (named .Rproj.user) where project-specific temporary files (e.g. auto-saved source documents, window-state, etc.) are stored.  
+3. Loads the project into RStudio and display its name in the Projects toolbar (far right on the menu bar).
+
+Using a project helps you manage file paths. The working directory is the project directory (i.e., the location of the .Rproj file).
+
+You can open a project with:
+
+1. File | Open Project or  File | Recent Projects  
+2. Double-clicking the  .Rproj file  
+3. Using the option on the far right of the tool bar  
+
+When you open project, a new R session starts and various settings are restored to their condition when the project was closed.
+
+Suggested reading [Chapter 2 Project-oriented workflow](https://whattheyforgot.org/project-oriented-workflow.html) of What they forgot to teach you about R [@Bryan-Hester].
+
+## `here()`
+
+If you are not working with a Project, the `here()` function in the `here` package returns the working directory when the package was loaded.
+
+```{r}
+here::here()
+```
+The colon notation `packagename::functionname()` is an alternative to first using `library(packagename)` then `functionname()`. It's useful when you only want to use a package a few times in a session or when you've loaded two packages which has functions with the same name and you want to specify which package should be used.
+
+`here()` can be used to build paths in a way that will transport to other systems, i.e., it's an alternative to typing the relative paths. 
+
+For example, if I want to read [beewing.txt](`r here::here("data", "beewing.txt")`) (which are left wing widths of 100  honey bees in mm) in:
+
+```{r}
+# the code to help you understand how it works is included
+# what is the wd
+here::here()
+# what is in the wd
+dir(here::here())
+# what is in the data folder in the the wd
+dir(here::here("data"))
+# build the path to the file. 
+file <- here::here("data", "beewing.txt")
+# what's in file
+file
+# note that it builds the path you request, data/beewing.txt, even if it doesn't exist
+# for example
+nonsense <- here::here("bob", "sue", "banana.txt")
+nonsense
+
+# read the file in
+bee <- read.table(file, header = TRUE)
+str(bee)
+``` 
+
+When working in a Project, `here::here()` returns the top level directory of the RStudio project. This will be the directory with the same name as the .RProj file in which that file is located.
+
+## Writing files
+
+Often we want to write to files. My main reasons for doing so are to save copies of data that have been processed and to save graphics
+
+To write a dataframe to a plain text file:
+```{r}
+# in this case I will just write the bee data frame to another file
+# in a folder I have already (called processed)
+file <- here::here("data", "processed", "bee2.txt")
+write.table(bee, file)
+```
+
+To create and save a ggplot:
+
+```{r}
+ggplot(data = bee, aes(x = wing)) +
+  geom_density() +
+  theme_classic()
+file <- here::here("figs", "beehist.png")
+ggsave(file)
+```
+
+
+### Writing functions
+
+Imagine there is no inbuilt function to calculate the mean. We will write our own function to calculate it to demonstrate the principle of function writing on a simple example.
+
+* Save a copy of [beewing.txt](`r here::here("data", "beewing.txt")`), read it in and check the structure
+```{r}
+file <- here::here("data", "beewing.txt")
+bee <- read.table(file, header = TRUE)
+str(bee)
+``` 
+If you were to calculate the mean bee wing width by hand you would sum all the values in bee$wing and divide by the total number of values. R makes this easy because it calculates things 'elementwise', i.e., it applies an operation to every element of a vector so that:
+```{r}
+sum(bee$wing)
+```
+adds up all the values. 
+
+You should rememember this from previous work. This is unusual amongst programming languages where you often need to use a loop to iterate through a vector and is very useful where data analysis and visualisation are the main tasks.
+
+We need to divide that sum by the length of the vector to get the mean:
+```{r}
+sum(bee$wing) / length(bee$wing)
+```
+
+We can create a function for future use. A function is defined by an assignment of the form:
+  
+  > `functionname <- function(arg1, arg2, ...) {expression}`
+
+The {expression} is any R code that uses the arguments (arg1 etc) to calculate a value. In our case, we will have just one argument, the vector of values, and our expression will be that needed to calculate the mean.
+```{r}
+my_mean <- function(v) {sum(v) / length(v)}
+```
+I chose `v`, as a name, arbitrarily. It doesn't matter what you call it (and it only exists inside the function when the function is called). All that matters is that the function expression describes what the function should do with the arguments passed. To call the function: 
+```{r}
+my_mean(bee$wing)
+```
+
+Functions are useful because they generalise a process thus making it reproducible without copying and pasting.
+
+Rather than having your function code in your main analysis code file, it is good practice to put it in it's own file and 'source' it from your main file. Sourcing a file makes any functions it contains available. Typically you save one function in a script with the same name as the function.
+
+To 'source' a file called my_mean.R use:
+```{r}
+file <- here::here("functions", "my_mean.R")
+source(file)
+```
+You call the function in the same way as normal.
+
+# Exercise
+The data in [chaff.txt](../data/chaff.txt) are the masses of male and female chaffinches. It is organised in to two columns, `males` and `females` a format which is not normally ideal. Your task is to organise the analysis of these data.  
+You need to: 
+
+* use an Rstudio Project, set up an appropriate directory structure and decide on some naming and style elements that you will use consistently.
+* read in the data.  
+* reformat the data into 'tidy' form, i.e., one column giving the sex, another giving the mass. Write the newly formatted data to a file.   
+* Write your own function for calculating the sums of squares of the whole dataset. SS(x) is the sum of the squared deviations from the mean given by:  
+    $\sum (x_i- \bar{x})^2$  
+  Put the code for the function in its own script and call it from your main script.  
+* carry out a statistical test on the data and record the result in comments.  
+* create and save a figure to accompany the statistical result.
+* can you format the figure using your own ggplot theme? You can achieve this by:  
+  * examining the code for theme_gray() (the default) by typing `theme_gray` without the brackets  
+  * copying and saving the code theme_gray in its own script called, for example, theme_emma.R  
+  * changing theme elements as you wish  
+  * sourcing your theme script and applying  
+
+
+# The Rmd file
+
+[Rmd file](`r here::here("workshops", "01_project_organisation.Rmd")`)
+
+
+# Packages
+
+* R [@R-base]  
+* tidyverse [@R-tidyverse]  
+* here [@R-here]
+
+![](`r here::here("pics", "58Mend.png")`)
+
+
