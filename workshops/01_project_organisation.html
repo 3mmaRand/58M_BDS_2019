@@ -1691,7 +1691,7 @@ div.tocify {
 <pre><code>## [1] &quot;M:/web/58M_BDS_2019&quot;</code></pre>
 <p>The colon notation <code>packagename::functionname()</code> is an alternative to first using <code>library(packagename)</code> then <code>functionname()</code>. It’s useful when you only want to use a package a few times in a session or when you’ve loaded two packages which has functions with the same name and you want to specify which package should be used.</p>
 <p><code>here()</code> can be used to build paths in a way that will transport to other systems, i.e., it’s an alternative to typing the relative paths.</p>
-<p>For example, if I want to read <a href="M:/web/58M_BDS_2019/data/beewing.txt">beewing.txt</a> (which are left wing widths of 100 honey bees in mm) in:</p>
+<p>For example, if I want to read <a href="data/beewing.txt">beewing.txt</a> (which are left wing widths of 100 honey bees in mm) in:</p>
 <pre class="r"><code># the code to help you understand how it works is included
 # what is the wd
 here::here()</code></pre>
@@ -1741,7 +1741,7 @@ ggsave(file)</code></pre>
 <h3>Writing functions</h3>
 <p>Imagine there is no inbuilt function to calculate the mean. We will write our own function to calculate it to demonstrate the principle of function writing on a simple example.</p>
 <ul>
-<li>Save a copy of <a href="M:/web/58M_BDS_2019/data/beewing.txt">beewing.txt</a>, read it in and check the structure</li>
+<li>Save a copy of <a href="data/beewing.txt">beewing.txt</a>, read it in and check the structure</li>
 </ul>
 <pre class="r"><code>file &lt;- here::here(&quot;data&quot;, &quot;beewing.txt&quot;)
 bee &lt;- read.table(file, header = TRUE)
@@ -1776,7 +1776,7 @@ source(file)</code></pre>
 </div>
 <div id="exercise" class="section level1">
 <h1>Exercise</h1>
-<p>The data in <a href="M:/web/58M_BDS_2019/data/chaff.txt">chaff.txt</a> are the masses of male and female chaffinches. It is organised in to two columns, <code>males</code> and <code>females</code> a format which is not normally ideal. Your task is to organise the analysis of these data.<br />
+<p>The data in <a href="data/chaff.txt">chaff.txt</a> are the masses of male and female chaffinches. It is organised in to two columns, <code>males</code> and <code>females</code> a format which is not normally ideal. Your task is to organise the analysis of these data.<br />
 You need to:</p>
 <ul>
 <li>use an Rstudio Project, set up an appropriate directory structure and decide on some naming and style elements that you will use consistently.</li>
@@ -1805,7 +1805,7 @@ Put the code for the function in its own script and call it from your main scrip
 </div>
 <div id="the-rmd-file" class="section level1">
 <h1>The Rmd file</h1>
-<p><a href="M:/web/58M_BDS_2019/workshops/01_project_organisation.Rmd">Rmd file</a></p>
+<p><a href="workshops/01_project_organisation.Rmd">Rmd file</a></p>
 </div>
 <div id="packages" class="section level1">
 <h1>Packages</h1>
