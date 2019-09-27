@@ -32,6 +32,7 @@ library(tidyverse)
 
 ## Aims
 
+The aim of this session is to show you how to organise your work in a logical, consistent and reproducible way using RStudio Projects, appropriate directory structures and portable code.
 
 ## Learning outcomes 
 
