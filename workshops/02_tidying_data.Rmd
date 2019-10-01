@@ -1,5 +1,5 @@
 ---
-title: "Workshop 2: Tyding Data"
+title: "Workshop 2: Tidying data, tidy data and the tidyverse."
 author: "Emma Rand"
 output:
   html_document:
