@@ -41,8 +41,7 @@ The successful student will be able to:
 * explain what is meant by ‘tidy data’.  
 * use pipes to link operations together.  
 * carry out some common data tidying tasks.  
-*   
-*  
+ 
 
 # Topics
 
