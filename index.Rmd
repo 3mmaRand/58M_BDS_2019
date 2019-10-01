@@ -46,7 +46,7 @@ Lecture 1 [google slides](https://docs.google.com/presentation/d/14sedkBZDdOSzJl
 
 Workshop 1: [Project Organisation.](workshops/01_project_organisation.html)
 
-Workshop 2: [Tidying data and the tidyverse.](workshops/01_project_organisation.html)
+Workshop 2: [Tidying data and the tidyverse.](workshops/02_tidying_data.html)
 
 Workshop 3: [Advanced Data Import.](workshops/01_project_organisation.html)
 
