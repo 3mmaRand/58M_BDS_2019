@@ -1,0 +1,118 @@
+---
+title: "Workshop 3: Advanced Data Import."
+author: "Emma Rand"
+output:
+  html_document:
+    toc: true
+    depth: 3
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    theme: spacelab
+  word_document: default
+bibliography: '`r here::here("refs", "references.bib")`'
+---
+
+
+![](`r here::here("pics", "58M.png")`)
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      message = FALSE,
+                      warning = FALSE)
+```
+
+```{r pkgs, include=FALSE}
+library(tidyverse)
+
+```
+
+
+# Introduction
+
+## Aims
+
+
+
+## Learning outcomes 
+
+The successful student will be able to:
+
+*   
+*   
+*   
+ 
+## Four aspects.
+* Where: stored locally (on your own computer) or remotely (on another computer/server).  
+* Format: various. structured as XML or JSON, in databases or may require harvesting.  
+* How: base R functions; Access to APIs for many forms of specialised data has been made easier with packages e.g., bioconductor.  
+* Result: often dataframes or dataframe-like structures (eg., tibbles), often specialised data structures.  
+
+
+## Locally stored plain text (or similar).
+
+This should be revision.
+
+* Essentially plain text (can be opened in notepad and make sense).  
+* Columns usually ‘delimited’ by a particular character (but fixed width does occur).  
+* Read in with the `read.table()` methods.  
+* `read.csv()`, `read.delim()` are just wrappers for `read.table()`.
+* `read.table(file)` is the minimum needed, other arguments have defaults.  
+* Remember that relative file location matters.  
+
+```{r}
+file <- here::here("data", "structurepred.txt")
+mydata <- read.table(file)
+str(mydata)
+```
+
+<font size="5"> `r emo::ji("unhappy")`</font>
+
+
+```{r}
+mydata <- read.table(file, header = TRUE)
+str(mydata)
+```
+
+<font size="5"> `r emo::ji("happy")`</font>
+
+* Arguments depend on data format.
+* Check manual for defaults.
+
+```{r error = TRUE}
+file <- here::here("data", "Icd10Code.csv")
+mydata <- read.table(file, header = TRUE)
+```
+
+<font size="5"> `r emo::ji("unhappy")`</font>
+
+* This is common error when the separtor is not the default.
+* Troubleshoot by reading in one line.
+
+First line:
+```{r}
+read.table(file, header = FALSE, nrows = 1)
+```
+
+
+Third line: 
+```{r}
+read.table(file, header = FALSE, nrows = 1, skip = 2)
+```
+
+It's splitting on white space because that is the default so there are many columns in some rows - "more columns than column names". The actual separator is a comma.
+
+```{r}
+mydata <- read.table(file, header = TRUE, sep = ",")
+```
+
+
+
+# The Rmd file
+
+[Rmd file](03_advanced_data_import.Rmd)
+
+
+![](`r here::here("pics", "58Mend.png")`)
+
+
