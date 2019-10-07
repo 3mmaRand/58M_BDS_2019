@@ -60,13 +60,17 @@ This should be revision.
 * `read.table(file)` is the minimum needed, other arguments have defaults.  
 * Remember that relative file location matters.  
 
+### Example 1
+
 ```{r}
 file <- here::here("data", "structurepred.txt")
 mydata <- read.table(file)
 str(mydata)
 ```
 
-<font size="5"> `r emo::ji("unhappy")`</font>
+<font size="5"> `r emo::ji("unhappy")`</font> The command runs but the result looks wrong.
+
+All the variables have been made factors even though the first should be numeric. This is because the first line in the file contains strings. These strings are the column names rather than the data themselves. We can tell R the file includes headers.
 
 
 ```{r}
@@ -74,28 +78,38 @@ mydata <- read.table(file, header = TRUE)
 str(mydata)
 ```
 
-<font size="5"> `r emo::ji("happy")`</font>
+<font size="5"> `r emo::ji("happy")`</font> Now it looks better!
 
+* There are several arguments that can be set.
 * Arguments depend on data format.
 * Check manual for defaults.
+
+### Example 2
 
 ```{r error = TRUE}
 file <- here::here("data", "Icd10Code.csv")
 mydata <- read.table(file, header = TRUE)
 ```
 
-<font size="5"> `r emo::ji("unhappy")`</font>
+<font size="5"> `r emo::ji("unhappy")`</font> The command won't run at all.
 
 * This is common error when the separtor is not the default.
 * Troubleshoot by reading in one line.
 
-First line:
+Read in the first line only:
 ```{r}
 read.table(file, header = FALSE, nrows = 1)
 ```
+Or you could use `readLines()`:
+```{r}
+readLines(file, n = 5)
+```
 
 
-Third line: 
+These look like they might be two column names but they have been read into one column. That is, the comma is not recognised as the separator.
+
+
+Read in the third line only:
 ```{r}
 read.table(file, header = FALSE, nrows = 1, skip = 2)
 ```
@@ -106,8 +120,215 @@ It's splitting on white space because that is the default so there are many colu
 mydata <- read.table(file, header = TRUE, sep = ",")
 ```
 
+## Locally stored special formats.
+
+* Cannot usually be opened in notepad.  
+* Often specific to proprietary software, e.g., SPSS, STATA, Matlab.  
+* If you have that software you may be able to export in plain text format.  
+* But usually there is a package or function that allows you to script the steps. Favourites of mine are:  
+  * `haven` [@haven] for SPSS, STATA, SAS  
+  * `readxl` for excel files  
+  * `jsonlite` for [JSON](https://en.wikipedia.org/wiki/JSON) 
+* Google is your friend.  
+
+### SPSS example using `haven`
+
+```{r}
+library(haven)
+file <- here::here("data", "prac9a.sav")
+mydata <- read_sav(file)
+str(mydata)
+```
+
+Note that a "tibble" is essentially a dataframe.
+
+There are `read_dta()` and `read_sas()` functions for STATA and SAS files respectively.
+
+## Files on the internet
+
+Simply use the URL rather than the local file path. Your options for import functions and arguments are the same as for local files.
+
+For example, these data are from a buoy (buoy #44025) off the coast of New Jersey at
+http://www.ndbc.noaa.gov/view_text_file.php?filename=44025h2011.txt.gz&dir=data/historical/stdmet/
+
+```{r}
+file <- file <- "http://www.ndbc.noaa.gov/view_text_file.php?filename=44025h2011.txt.gz&dir=data/historical/stdmet/"
+
+# use readLines() data format: look on the web or use:
+readLines(file, n = 5)
+
+```
+
+The first two lines give the column name and units; the data start on line 3
+
+```{r}
+mydata <- read.table(file, header = F, skip = 2)
+
+```
+
+* It is better to read from the internet than download the file if the data are likely to be updated.
+
+### From googlesheets
+
+This can be done with the `googlesheets` package [@bryan_zhao] and requires two steps: registering the sheet for use (you will need to 'authenticate') and reading it in.
+
+Assuming your google sheet has the name "colours (Responses)":
+```{r}
+library(googlesheets)
+# Register the sheet for use with gs_title()
+colours <- gs_title("colours (Responses)")
+```
+
+This will open a browser to ask you to allow the googlesheets package access your googlesheets. Choose Allow.
+
+Read in data:
+```{r}
+coloursurvey <- gs_read(colours)
+```
 
 
+## Web scraping
+
+<!-- What if data are not in a file but on webpage?   -->
+
+<!-- One solution is to use to 'scrape' the data using package rvest and an extension to Chrome called [Selectorgadget](http://selectorgadget.com/) that allows you to interactively determine what ‘css selector’ you need to extract desired components from a page -->
+
+<!-- Go to URL: https://en.wikipedia.org/wiki/List_of_countries_and_dependencies_by_population -->
+<!-- Find the table for the population to extract. -->
+<!-- Right-click the table -> click Inspect -->
+<!-- On the right-hand side, a pop-up will show and will need to select Element -->
+<!-- Right-click the table element -> Copy -> Copy Xpath -->
+
+
+<!-- ```{r} -->
+<!-- library(rvest) -->
+<!-- library(tidyverse) -->
+<!-- url <- "https://en.wikipedia.org/wiki/Global_biodiversity" -->
+<!-- test <-read_html(url) %>%  -->
+<!--     html_nodes(xpath='//*[@id="mw-content-text"]/div/table') %>%  -->
+<!--   html_table() -->
+
+<!-- test <- test[[1]] -->
+<!-- ``` -->
+
+
+## Data from databases
+
+There are many packages: 
+
+* For relational databases (Oracle, MSSQL, MySQL):  
+  * RMySQL, RODBC  
+* For non- relational databases (MongoDB, Hadoop):  
+  * rmongodb, rhbase  
+*  - packages for import, tidying, analysis
+  * rentrez, Bioconductor 
+* ropensci: R packages that provide programmatic access to a variety of scientific data,  full-text of journal articles, and metrics of scholarly impact.
+
+# Exercises
+
+1. Local files. You may feel confident enough to skip this exercise but otherwise save these files below to your 'data' directory and read them in. Use the manual for `read.table()` to see all the options.  
+
+  * [Mammal_abundance_indices.txt](../data/Mammal_abundance_indices.txt)
+
+```{r  include=FALSE, error=TRUE}
+#============== Data Import problem ==============#
+file <- here::here("data", "Mammal_abundance_indices.txt")
+# you might try first attempt
+# mydata <- read.table(file)
+# gives an error. Let's try using readLines() to look at the first line
+readLines(file, n = 1)
+# aha, the seperator is a tab \t
+# specify the sep
+mydata <- read.table(file, 
+                     header = T, 
+                     sep = "\t")
+str(mydata) # that looks ok
+``` 
+
+  * [periwinkle.txt](../data/periwinkle.txt)
+
+```{r  include=FALSE, error=TRUE}
+#============== Data Import problem ==============#
+# you might try first attempt
+file <- here::here("data", "periwinkle.txt")
+mydata <- read.table(file, header = T)
+str(mydata)
+# no error but the dataframe is nonsense. Let's try using readLines() to look at the first line
+readLines(file, n = 1)
+# aha, the seperator is /
+# specify the sep
+mydata <- read.table(file, header = T, sep = "/")
+str(mydata) # that looks ok
+``` 
+
+  * [structurepred.csv](../data/structurepred.csv)
+
+```{r include=FALSE, error=TRUE}
+#============== Data Import problem ==============#
+# first attempts
+file <- here::here("data", "structurepred.csv")
+# mydata <- read.table(file, header = T)
+# no error but dataframe looks wrong
+# mydata <- read.csv(file)
+# gives an error
+
+#Let's try using readLines() to look at the first line
+readLines(file, n = 1)
+# still not sure. sep seems to be a semi-colon despite it being called csv. 
+# let's read a few more lines in
+readLines(file, n = 10)
+# aha, the seperator is ; and the decimal is ,
+# specify and use read.table or realise this is European csv format
+mydata <- read.table(file, 
+                     header = T,
+                     sep = ";", 
+                     dec = ",")
+# or
+mydata <- read.csv2(file)
+str(mydata) # that looks ok
+``` 
+
+  * [csativa.txt](../data/csativa.txt)
+
+```{r include=FALSE, error=TRUE}
+#============== Data Import problem ==============#
+# first attempts
+file <- here::here("data", "csativa.txt")
+# mydata <- read.table(file, header = T)
+# gives an error: more columns than column names
+# let's read a few lines in
+readLines(file, n = 10)
+# there is some text at the top which isn't data
+mydata <- read.table(file, skip = 5, header = T)
+str(mydata) # that looks ok
+``` 
+
+  * [carsdata.dta](../data/carsdata.dta)
+
+```{r include=FALSE, error=TRUE}
+#============== Data Import problem ==============#
+# we ne8ed to read a STATA file in - there's a function for it in haven
+file <- here::here("data", "carsdata.dta")
+mydata <- read_dta(file)
+str(mydata) # that looks ok
+``` 
+
+2. This is tidying exercise. Can you read in the buoy data with appropriate columns names? I suggest:  
+  * reading the first line of the file
+  * processing that line using similar methods to those used in the [case study](http://www-users.york.ac.uk/~er13/58M_BDS_2019/workshops/02_tidying_data.html#case_study_covering_some_typical_tasks) of Workshop 2: Tidying data, tidy data and the tidyverse.
+```{r}
+file <- file <- "http://www.ndbc.noaa.gov/view_text_file.php?filename=44025h2011.txt.gz&dir=data/historical/stdmet/"
+
+vars <- readLines(file, n = 1)
+vars <- vars %>% 
+  strsplit(., split = "\\s+", fixed = FALSE) %>% 
+  unlist()
+
+mydata <- read.table(file, header = F,
+                     skip = 2, 
+                     col.names = vars)
+
+```
 # The Rmd file
 
 [Rmd file](03_advanced_data_import.Rmd)
