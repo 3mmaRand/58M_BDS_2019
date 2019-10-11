@@ -74,20 +74,20 @@ Important:
 
 The [tidyverse](https://www.tidyverse.org/) [@R-tidyverse] is "an opinionated collection of R packages designed for data science. All packages share an underlying design philosophy, grammar, and data structures." `ggplot` is one of these packages. You can install and load all of them with:
 
-
+Do not do this is working on a Biology PC - it's already installed.
 ```{r eval=FALSE}
 install.packages("tidyverse")
 library(tidyverse)
 ```
 
 ## The pipe `%>%`
-The `magrittr` package [@magrittr] is part of the tidyverse and includes the pipe operater which can improves code readability by:
+The `magrittr` package [@magrittr] is part of the tidyverse and includes the pipe operater which can improve code readability by:
 
 * structuring sequences of data operations left-to-right (as opposed to from the inside and out),
 * minimizing the need for intermediates, 
 * making it easy to add steps anywhere in the sequence of operations.
 
-For example, to apply a log-squartroot transformation you might use:
+For example, to apply a log-squareroot transformation you might use:
 ```{r}
 # generate some numbers
 nums <- sample(1:100, size = 10, replace = FALSE)

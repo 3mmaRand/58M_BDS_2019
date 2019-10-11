@@ -7,6 +7,7 @@
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 <meta name="author" content="Emma Rand" />
@@ -92,8 +93,6 @@ overflow: auto;
 margin-left: 2%;
 position: fixed;
 border: 1px solid #ccc;
-webkit-border-radius: 6px;
-moz-border-radius: 6px;
 border-radius: 6px;
 }
 
@@ -121,9 +120,14 @@ font-size: 12px;
 .tocify-subheader .tocify-subheader {
 text-indent: 30px;
 }
-
 .tocify-subheader .tocify-subheader .tocify-subheader {
 text-indent: 40px;
+}
+.tocify-subheader .tocify-subheader .tocify-subheader .tocify-subheader {
+text-indent: 50px;
+}
+.tocify-subheader .tocify-subheader .tocify-subheader .tocify-subheader .tocify-subheader {
+text-indent: 60px;
 }
 
 .tocify .tocify-item > a, .tocify .nav-list .nav-header {
@@ -527,13 +531,13 @@ float: none;
 
           item.append($("<a/>", {
 
-            "text": self.text()
+            "html": self.html()
 
           }));
 
         } else {
 
-          item.text(self.text());
+          item.html(self.html());
 
         }
 
@@ -1364,7 +1368,6 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -1438,48 +1441,9 @@ summary {
 }
 </style>
 
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
-  });
-});
-</script>
-
 <!-- code folding -->
 
 
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = false;
-    options.smoothScroll = false;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <style type="text/css">
 
@@ -1528,8 +1492,6 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -1587,9 +1549,13 @@ div.tocify {
 <h2>Learning outcomes</h2>
 <p>The successful student will be able to:</p>
 <ul>
-<li></li>
-<li></li>
-<li></li>
+<li>use an understanding of what matters in their data import<br />
+</li>
+<li>import plain text and proprietary data formats stored locally and on the web<br />
+</li>
+<li>carry out some simple web scaping<br />
+</li>
+<li>start to appreciate the number of packages available for importing publically accessible data</li>
 </ul>
 </div>
 <div id="four-aspects." class="section level2">
@@ -1636,7 +1602,7 @@ str(mydata)</code></pre>
 ##  $ rmsd: num  9.04 14.95 17.73 3.12 11.28 ...
 ##  $ prog: Factor w/ 3 levels &quot;Abstruct&quot;,&quot;Predicto&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
 ##  $ prot: int  1 2 3 4 5 6 7 8 9 10 ...</code></pre>
-<p><font size="5"> 😆</font> Now it looks better!</p>
+<p><font size="5"> 😃</font> Now it looks better!</p>
 <ul>
 <li>There are several arguments that can be set.</li>
 <li>Arguments depend on data format.</li>
@@ -1702,12 +1668,12 @@ str(mydata)</code></pre>
 ##  $ terrsize: num  0.463 0.446 0.651 0.507 0.879 ...
 ##   ..- attr(*, &quot;label&quot;)= chr &quot;Territory size (Ha)&quot;
 ##   ..- attr(*, &quot;format.spss&quot;)= chr &quot;F8.3&quot;
-##  $ country : &#39;labelled&#39; num  1 1 1 1 1 1 1 1 1 1 ...
+##  $ country : &#39;haven_labelled&#39; num  1 1 1 1 1 1 1 1 1 1 ...
 ##   ..- attr(*, &quot;label&quot;)= chr &quot;Country&quot;
 ##   ..- attr(*, &quot;format.spss&quot;)= chr &quot;F8.0&quot;
 ##   ..- attr(*, &quot;labels&quot;)= Named num  1 2 3
 ##   .. ..- attr(*, &quot;names&quot;)= chr  &quot;U.K&quot; &quot;France&quot; &quot;Germany&quot;
-##  $ woodtype: &#39;labelled&#39; num  1 1 1 1 1 1 1 1 1 1 ...
+##  $ woodtype: &#39;haven_labelled&#39; num  1 1 1 1 1 1 1 1 1 1 ...
 ##   ..- attr(*, &quot;label&quot;)= chr &quot;Wood Type&quot;
 ##   ..- attr(*, &quot;format.spss&quot;)= chr &quot;F8.0&quot;
 ##   ..- attr(*, &quot;labels&quot;)= Named num  1 2
@@ -1757,22 +1723,23 @@ colours &lt;- gs_title(&quot;colours (Responses)&quot;)</code></pre>
 </div>
 <div id="web-scraping" class="section level2">
 <h2>Web scraping</h2>
-<!-- What if data are not in a file but on webpage?   -->
-<!-- One solution is to use to 'scrape' the data using package rvest and an extension to Chrome called [Selectorgadget](http://selectorgadget.com/) that allows you to interactively determine what ‘css selector’ you need to extract desired components from a page -->
-<!-- Go to URL: https://en.wikipedia.org/wiki/List_of_countries_and_dependencies_by_population -->
-<!-- Find the table for the population to extract. -->
-<!-- Right-click the table -> click Inspect -->
-<!-- On the right-hand side, a pop-up will show and will need to select Element -->
-<!-- Right-click the table element -> Copy -> Copy Xpath -->
-<!-- ```{r} -->
-<!-- library(rvest) -->
-<!-- library(tidyverse) -->
-<!-- url <- "https://en.wikipedia.org/wiki/Global_biodiversity" -->
-<!-- test <-read_html(url) %>%  -->
-<!--     html_nodes(xpath='//*[@id="mw-content-text"]/div/table') %>%  -->
-<!--   html_table() -->
-<!-- test <- test[[1]] -->
-<!-- ``` -->
+<p>What if data are not in a file but on webpage? One solution is to to ‘scrape’ the data using package rvest. This is just one samll example of a big topic.</p>
+<p>We are going to get the information from a wikipedia page on <a href="https://en.wikipedia.org/wiki/Global_biodiversity">Global biodiversity</a>. We will need to retrieve the html (i.e., the page source) and find the the part of the source which contains the table information.</p>
+<ul>
+<li>Go to the web page: <a href="https://en.wikipedia.org/wiki/Global_biodiversity" class="uri">https://en.wikipedia.org/wiki/Global_biodiversity</a></li>
+<li>Find the table for the population to extract.</li>
+<li>Right-click the table and choose Inspect</li>
+<li>A complicated looking box will appear on the right.</li>
+<li>You need to right-click the table element then choose Copy and Copy Xpath</li>
+</ul>
+<pre class="r"><code>library(rvest)
+
+url &lt;- &quot;https://en.wikipedia.org/wiki/Global_biodiversity&quot;
+test &lt;- read_html(url) %&gt;%
+  html_nodes(xpath = &#39;//*[@id=&quot;mw-content-text&quot;]/div/table&#39;) %&gt;%
+  html_table() %&gt;% 
+  .[[1]]</code></pre>
+<p>You’d need to tidy the resulting dataframe.</p>
 </div>
 <div id="data-from-databases" class="section level2">
 <h2>Data from databases</h2>
@@ -1785,15 +1752,17 @@ colours &lt;- gs_title(&quot;colours (Responses)&quot;)</code></pre>
 </ul></li>
 <li>For non- relational databases (MongoDB, Hadoop):
 <ul>
-<li>rmongodb, rhbase<br />
-</li>
+<li>rmongodb, rhbase</li>
 </ul></li>
-<li><ul>
-<li>packages for import, tidying, analysis</li>
-</ul></li>
-<li>rentrez, Bioconductor</li>
-<li>ropensci: R packages that provide programmatic access to a variety of scientific data, full-text of journal articles, and metrics of scholarly impact.</li>
 </ul>
+</div>
+<div id="data-from-apis" class="section level2">
+<h2>Data from APIs</h2>
+<p>Many organisations provide an API (application program interface) to access their data. This means you don’t have to scrape web pages of search results because there is a defined set of tools or protocols which allow access so you don’t need to understand the underlying structure of the information.</p>
+<p>Many packages have been written that make use of APIs and make your life much easier.</p>
+<p>[Bioconductor] (<a href="https://www.bioconductor.org/" class="uri">https://www.bioconductor.org/</a>) is a whole ecosystem of R tools to analyse high-throughput genomic data and access public repositories</p>
+<p><a href="https://ropensci.org/">ropensci</a> is a curated set of R packages that provide programmatic access to a variety of scientific data, full-text of journal articles, and metrics of scholarly impact.</p>
+<p>Not every API will have an available package but may be JSON-based APIs meaning they return data in JSON format. One example is Twitter. The <code>jsonlite</code> package</p>
 </div>
 </div>
 <div id="exercises" class="section level1">
@@ -1816,16 +1785,17 @@ colours &lt;- gs_title(&quot;colours (Responses)&quot;)</code></pre>
 <li>reading the first line of the file</li>
 <li>processing that line using similar methods to those used in the <a href="http://www-users.york.ac.uk/~er13/58M_BDS_2019/workshops/02_tidying_data.html#case_study_covering_some_typical_tasks">case study</a> of Workshop 2: Tidying data, tidy data and the tidyverse.</li>
 </ul>
-<pre class="r"><code>file &lt;- file &lt;- &quot;http://www.ndbc.noaa.gov/view_text_file.php?filename=44025h2011.txt.gz&amp;dir=data/historical/stdmet/&quot;
-
-vars &lt;- readLines(file, n = 1)
-vars &lt;- vars %&gt;% 
-  strsplit(., split = &quot;\\s+&quot;, fixed = FALSE) %&gt;% 
-  unlist()
-
-mydata &lt;- read.table(file, header = F,
-                     skip = 2, 
-                     col.names = vars)</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li>Below is a file containing flowcyometry data. Your task is to use google to find out how to read it in and develop understanding of the resulting datastructure by examining its components. You should find any packages to need are already installed but you will still need to identify and ‘library’ them. What kind object results? Where is the data itself? What is the other information? Can you plot any of the actual data - for example do the classic forward vs side scatter plot?</li>
+</ol>
+<p>The data: <a href="../data/Specimen_001_Tube_001_001.fcs">Specimen_001_Tube_001_001.fcs</a></p>
+<ol start="4" style="list-style-type: decimal">
+<li>Can you work out how to read in all the files of the same format in a particular directory? You could try to read them into separate dataframes or a single dataframe. A collection of suitable files is <a href="../data/specdata.zip">specdata.zip</a> which you could download and unzip.</li>
+</ol>
+<p>If you’re stuck, here is one fucntion I wrote: <a href="../functions/em_read_list.R">em_read_list.R</a>. Work out how to use it from the code in that file.</p>
+<ol start="5" style="list-style-type: decimal">
+<li>Browse the <a href="https://www.bioconductor.org/packages/release/workflows/">Bioconductor Workflow Packages</a>. These are analysis packages which include a detailed example workflow.</li>
+</ol>
 </div>
 <div id="the-rmd-file" class="section level1">
 <h1>The Rmd file</h1>
@@ -1859,6 +1829,49 @@ $(document).ready(function () {
 });
 
 
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = false;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

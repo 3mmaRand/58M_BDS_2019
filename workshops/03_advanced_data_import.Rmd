@@ -38,9 +38,10 @@ library(tidyverse)
 
 The successful student will be able to:
 
-*   
-*   
-*   
+* use an understanding of what matters in their data import  
+* import plain text and proprietary data formats stored locally and on the web  
+* carry out some simple web scaping  
+* start to appreciate the number of packages available for importing publically accessible data
  
 ## Four aspects.
 * Where: stored locally (on your own computer) or remotely (on another computer/server).  
@@ -189,26 +190,28 @@ coloursurvey <- gs_read(colours)
 
 ## Web scraping
 
-What if data are not in a file but on webpage? One solution is to  to 'scrape' the data using package rvest and an extension to Chrome called [Selectorgadget](http://selectorgadget.com/) that allows you to interactively determine what ‘css selector’ you need to extract desired components from a page -->
+What if data are not in a file but on webpage? One solution is to  to 'scrape' the data using package rvest. This is just one samll example of a big topic.
 
-<!-- Go to URL: https://en.wikipedia.org/wiki/List_of_countries_and_dependencies_by_population -->
-<!-- Find the table for the population to extract. -->
-<!-- Right-click the table -> click Inspect -->
-<!-- On the right-hand side, a pop-up will show and will need to select Element -->
-<!-- Right-click the table element -> Copy -> Copy Xpath -->
+We are going to get the information from a wikipedia page on [Global biodiversity](https://en.wikipedia.org/wiki/Global_biodiversity). We will need to retrieve the html (i.e., the page source) and find the the part of the source which contains the table information.
+
+* Go to the web page: https://en.wikipedia.org/wiki/Global_biodiversity 
+* Find the table for the population to extract.
+* Right-click the table and choose Inspect
+* A complicated looking box will appear on the right.
+* You need to right-click the table element then choose Copy and Copy Xpath
 
 
-<!-- ```{r} -->
-<!-- library(rvest) -->
-<!-- library(tidyverse) -->
-<!-- url <- "https://en.wikipedia.org/wiki/Global_biodiversity" -->
-<!-- test <-read_html(url) %>%  -->
-<!--     html_nodes(xpath='//*[@id="mw-content-text"]/div/table') %>%  -->
-<!--   html_table() -->
+```{r}
+library(rvest)
 
-<!-- test <- test[[1]] -->
-<!-- ``` -->
+url <- "https://en.wikipedia.org/wiki/Global_biodiversity"
+test <- read_html(url) %>%
+  html_nodes(xpath = '//*[@id="mw-content-text"]/div/table') %>%
+  html_table() %>% 
+  .[[1]]
+```
 
+You'd need to tidy the resulting dataframe.
 
 ## Data from databases
 
@@ -218,9 +221,17 @@ There are many packages:
   * RMySQL, RODBC  
 * For non- relational databases (MongoDB, Hadoop):  
   * rmongodb, rhbase  
-* tools to analyse high-throughput genomic data and access public repositories:  
-  * [Bioconductor] (https://www.bioconductor.org/) 
-* [ropensci](https://ropensci.org/): R packages that provide programmatic access to a variety of scientific data,  full-text of journal articles, and metrics of scholarly impact.
+
+## Data from APIs
+Many organisations provide an API (application program interface) to access their data. This means you don't have to scrape web pages of search results because there is a defined set of tools or protocols which allow access so you don't need to understand the underlying structure of the information.
+
+Many packages have been written that make use of APIs and make your life much easier.
+
+[Bioconductor] (https://www.bioconductor.org/) is a whole ecosystem of R tools to analyse high-throughput genomic data and access public repositories  
+ 
+[ropensci](https://ropensci.org/) is a curated set of R packages that provide programmatic access to a variety of scientific data,  full-text of journal articles, and metrics of scholarly impact.
+
+Not every API will have an available package but may be JSON-based APIs meaning they return data in JSON format. One example is Twitter. The `jsonlite` package
 
 # Exercises
 
@@ -328,18 +339,38 @@ mydata <- read.table(file, header = F,
 
 ```
 
+3. Below is a file containing flowcyometry data. Your task is to use google to find out how to read it in and develop understanding of the resulting datastructure by examining its components. You should find any packages to need are already installed but you will still need to identify and 'library' them.
+What kind object results? Where is the data itself? What is the other information? Can you plot any of the actual data - for example do the classic forward vs side scatter plot?
 
-4. Browse the [Bioconductor Workflow Packages] (https://www.bioconductor.org/packages/release/workflows/) and try to follow one of the workflows. Packages installed on the Biology pcs include: `cytofWorkflow`, ``, ``, ``, 
+The data: [Specimen_001_Tube_001_001.fcs](../data/Specimen_001_Tube_001_001.fcs)
 
-<!-- cytofWorkflow -->
-<!-- library(proteomics) -->
-<!-- library(ExpressionNormalizationWorkflow) -->
-<!-- library(recountWorkflow) -->
-<!-- library(rnaseqGene) -->
-<!-- library(RNAseq123) -->
+```{r include=FALSE, error=TRUE}
+# I suggest flowCore which is Bioconductor package which is installed.
+library(flowCore)
+# my file: file must have extension ".FCS"
+file <- here::here("data", "Specimen_001_Tube_001_001.fcs" )
+# import
+flowdata <- read.FCS(file, alter.names = TRUE)
+flowdata
+flowdata@exprs[1,1]
+str(flowdata@exprs)
+
+# put forward and side scatter in a dataframe
+expdat <- data.frame(flowdata@exprs[,1:4])
+ggplot(data = expdat, aes(x = FSC.A, y = SSC.A)) +
+  geom_point(size = 0.5, colour = "gray")
+```
+4. Can you work out how to read in all the files of the same format in a particular directory? You could try to read them into separate dataframes or a single dataframe. A collection of suitable files is [specdata.zip](../data/specdata.zip) which you could download and unzip. 
+
+If you're stuck, here is one fucntion I wrote:  [em_read_list.R](../functions/em_read_list.R). Work out how to use it from the code in that file.
+
+
+5. Browse the [Bioconductor Workflow Packages](https://www.bioconductor.org/packages/release/workflows/). These are analysis packages which include a detailed example workflow.
+
 # The Rmd file
 
 [Rmd file](03_advanced_data_import.Rmd)
+
 
 
 ![](`r here::here("pics", "58Mend.png")`)
