@@ -32,7 +32,7 @@ library(tidyverse)
 
 ## Aims
 
-
+The aim of this session is to strength your ability to import your own data files regardless of the formatting and to introduce you to some of the other ways to import data such as from googlesheets, through webscrapping and via APIs.
 
 ## Learning outcomes 
 
@@ -227,7 +227,7 @@ Many organisations provide an API (application program interface) to access thei
 
 Many packages have been written that make use of APIs and make your life much easier.
 
-[Bioconductor] (https://www.bioconductor.org/) is a whole ecosystem of R tools to analyse high-throughput genomic data and access public repositories  
+[Bioconductor] (https://www.bioconductor.org/) is a whole ecosystem of R tools to analyse high-throughput genomic data and access public repositories. They are available from Bioconductor rather than CRAN. To install Bioconductor packages on your own computer you will need to install `BiocManager` from CRAN then use `BiocManager::install("packagename")`.
  
 [ropensci](https://ropensci.org/) is a curated set of R packages that provide programmatic access to a variety of scientific data,  full-text of journal articles, and metrics of scholarly impact.
 

@@ -1544,6 +1544,7 @@ div.tocify {
 <h1>Introduction</h1>
 <div id="aims" class="section level2">
 <h2>Aims</h2>
+<p>The aim of this session is to strength your ability to import your own data files regardless of the formatting and to introduce you to some of the other ways to import data such as from googlesheets, through webscrapping and via APIs.</p>
 </div>
 <div id="learning-outcomes" class="section level2">
 <h2>Learning outcomes</h2>
@@ -1602,7 +1603,7 @@ str(mydata)</code></pre>
 ##  $ rmsd: num  9.04 14.95 17.73 3.12 11.28 ...
 ##  $ prog: Factor w/ 3 levels &quot;Abstruct&quot;,&quot;Predicto&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
 ##  $ prot: int  1 2 3 4 5 6 7 8 9 10 ...</code></pre>
-<p><font size="5"> 😃</font> Now it looks better!</p>
+<p><font size="5"> 😆</font> Now it looks better!</p>
 <ul>
 <li>There are several arguments that can be set.</li>
 <li>Arguments depend on data format.</li>
@@ -1760,7 +1761,7 @@ test &lt;- read_html(url) %&gt;%
 <h2>Data from APIs</h2>
 <p>Many organisations provide an API (application program interface) to access their data. This means you don’t have to scrape web pages of search results because there is a defined set of tools or protocols which allow access so you don’t need to understand the underlying structure of the information.</p>
 <p>Many packages have been written that make use of APIs and make your life much easier.</p>
-<p>[Bioconductor] (<a href="https://www.bioconductor.org/" class="uri">https://www.bioconductor.org/</a>) is a whole ecosystem of R tools to analyse high-throughput genomic data and access public repositories</p>
+<p>[Bioconductor] (<a href="https://www.bioconductor.org/" class="uri">https://www.bioconductor.org/</a>) is a whole ecosystem of R tools to analyse high-throughput genomic data and access public repositories. They are available from Bioconductor rather than CRAN. To install Bioconductor packages on your own computer you will need to install <code>BiocManager</code> from CRAN then use <code>BiocManager::install(&quot;packagename&quot;)</code>.</p>
 <p><a href="https://ropensci.org/">ropensci</a> is a curated set of R packages that provide programmatic access to a variety of scientific data, full-text of journal articles, and metrics of scholarly impact.</p>
 <p>Not every API will have an available package but may be JSON-based APIs meaning they return data in JSON format. One example is Twitter. The <code>jsonlite</code> package</p>
 </div>
