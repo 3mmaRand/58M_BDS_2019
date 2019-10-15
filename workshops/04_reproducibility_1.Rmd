@@ -1,0 +1,237 @@
+---
+title: "Workshop 4:  Reproducibility and an introduction to R Markdown."
+author: "Emma Rand"
+output:
+  html_document:
+    toc: true
+    depth: 3
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    theme: spacelab
+  word_document: default
+bibliography: '`r here::here("refs", "references.bib")`'
+---
+
+
+![](`r here::here("pics", "58M.png")`)
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      message = FALSE,
+                      warning = FALSE)
+```
+
+```{r pkgs, include = FALSE}
+library(tidyverse)
+library(haven)
+```
+
+
+# Introduction
+
+## Aims
+
+The aim of this session is to introduce you to good programming practice and the use of R Markdown for creating reproducible analyses.
+
+## Learning outcomes 
+
+The successful student will be able to:
+
+* Organise and document code effectively.  
+* Follow good practice in code styling.  
+* Create simple R Markdown documents.  
+* Control the behaviour of code chunks.  
+ 
+## Reproducibility is good scientific practice
+
+Analysis workflows should conform to the same practices as lab projects and notebooks: structured and documented pipelines. 
+
+* Is best practice, important in research collaboration and mandatory in many  industry settings.   
+* Will likely become mandatory for science publication and funding.  
+* Will ultimately make your life much easier.  
+* Requires time, diligence and practice.  
+* Has ‘impact’.
+
+Reproducibility is a continuum - some is better than none:
+
+* Organise your project (directory structure). See [Workshop 1](01_project_organisation.html).  
+* Script **everything**.  
+* Organise code into sections.  
+* Code formatting and style.  
+* Code ‘algorithmically’ / ‘algebraically’.
+* Document your code with comments. 
+* Modularise your code by writing functions. See [Workshop 1](01_project_organisation.html).  
+* Use R Markdown [@markdown1; @markdown2]. See [Workshop 4](04_reproducibility_1.html) and [Workshop 5](05_advanced_rmarkdown.html)  
+* Collaboration and Version control: Git and GitHub (not covered in this module but see @Bryan2018-hl). 
+
+
+Ask yourself:
+
+* Readability - Could future you or others understand what you did and why? Could you repeat?  
+* Reproducibility - Could you (or others) recreate everything from data import to results communication?  
+* Version control - Could you collaborate on code with others? Could you track code development.  
+
+Two good references are @Wilson2014-ij and @Wilson2017-cp.
+
+## What is R Markdown
+
+Live demonstration.
+
+* Blends narrative text with analysis code and output.  
+* code is in 'chunks' and you can control the behaviour of each code chunk.  
+* Human readable.  
+* YAML ("YAML Ain't Markup Language") header between the `---` gives metadata about the Rmd document and its output.   
+* Code chunk options control whether the code and its output end up in your 'knitted' document.  
+* comments:  
+  * in a code chunk the # is still used for comments,  
+  * in the text a comment is written like this <!-- a comment -->,  
+  * but use Ctrl+Shift+C,  
+* \# in the text indicate headings.
+
+## Make your own R markdown doc
+
+* File | New File | R Markdown.  
+* Add a title.  
+* Add your name.  
+* Delete everything except:  
+  * the YAML header between the ---
+  * the first code chunk which begins:
+  ` ```{r setup, include=FALSE} `
+
+That first code chunk is for setting some **default** code chunk options. 
+
+I often use these:
+
+
+````
+```{r setup, include = FALSE}`r ''`
+knitr::opts_chunk$set(echo = FALSE, 
+                      warning = FALSE,
+                      message = FALSE)
+```
+````
+`echo = FALSE` means the code will not be included by default - this is normally what you want in a report.
+
+`include = FALSE` means neither the code nor output will appear.
+
+## Organise code into sections.
+
+Have separate named code chunks for each process: set up, package loading, data import, data tidying (maybe several chunks), different analyses, figures etc.
+
+Naming chunks makes it easier to debug.
+
+After the `setup` chunk, I typically have a chunk for loading all the packages I need. I usually add brief comments explaining why I need them if they aren't packages I use all the time.
+
+````
+```{r pkg}`r ''`
+library(tidyverse)
+```
+````
+Then the chunk for importing.
+
+````
+```{r import}`r ''`
+# code and comments for data import
+
+```
+````
+Then chunks for tidying. These may have names that describe the type of tidying. 
+
+````
+```{r tidy}`r ''`
+# code and comments
+
+```
+````
+
+And so on.
+
+All of these would have the report narative around the chunks of code. The exact organisation depends on the project. I often reorganise my chunks as the analysis develops.
+
+## Code formatting and style.
+*"Good coding style is like correct punctuation: you can manage without it, butitsuremakesthingseasiertoread. "*
+[The tidyverse style guide](https://style.tidyverse.org/) 
+
+Some keys points:
+
+* be consistent, emulate experienced coders  
+* accept *"The only way to write good code is to write tons of shitty code first. Feeling shame about bad code stops you from getting to good code"*   
+* use snake_case (not CamelCase, dot.case or kebab-case)  
+* use `<-` not `=` for assignment  
+* use spacing around most operators and after commas  
+* use indentation  
+* avoid long lines, break up code blocks with new lines  
+* use `"` for quoting text (not `'`) unless the text contains double quotes  
+* do use kebab-case in rmarkdown code chunk names  
+
+```{r eval=FALSE}
+# Ugly code
+names(pigeon)[1]<-"interorbital"; hist(pigeon$interorbital,xlim=c(8,14),main=NULL,xlab="Width (mm)",ylab="Number of pigeons",col="grey")
+```
+
+```{r eval=FALSE}
+# Well-styled code
+names(pigeon)[1] <- "interorbital"
+hist(pigeon$interorbital,
+     xlim = c(8, 14),
+     main = NULL,
+     xlab = "Width (mm)",
+     ylab = "Number of pigeons",
+     col  = "grey")
+
+```
+
+## Code ‘algorithmically’.
+
+Write code which expresses the structure of the problem/solution.
+
+Do not hard code numbers if at all possible to avoid.
+
+```{r}
+# bad
+sum(3, 5, 6, 7, 8) / 5
+(3 - 5.8)^2 + (5 - 5.8)^2 + (6 - 5.8)^2 + (7 - 5.8)^2 + (8 - 5.8)^2
+```
+
+```{r}
+# good
+offspring <- c(3, 5, 6, 7, 8)
+mean_offspring <- sum(offspring) / length(offspring)
+sum((offspring - mean_offspring)^2)
+```
+
+
+## Document your code with comments.
+
+Much of the description of the project will be in the report text, often in a high-level form. Additional information required to understand the properties of the data and the rationale and  mechanics of the analyses need to be documented in comments.
+
+Use comments extensively. Use comments both to give an overview.
+
+* describe the raw data: provenance, format, size, date of creation / download, ownership / license, variables.
+* give an overview of processing for analysis as well as individual comments for each action. 
+* give an overview of analysis as well as individual comments for each action.
+* give a brief rationale for decisions and assumptions at appropriate places.
+* consider a 'start with the comments' approach for planning.
+
+# Exercise
+Use the Case study and exercises from the example in Workshop 2: [Tidying data and the tidyverse.](workshops/02_tidying_data.html) to develop a report generated through R Markdown. The data are in [Y101_Y102_Y201_Y202_Y101-5.csv](../data/Y101_Y102_Y201_Y202_Y101-5.csv). 
+
+Do:
+
+* Create a Project and suitable directory structure for the analysis.  
+* Follow the good practice in this workshop to organise and document your analysis.  
+* Follow the advice in the [The tidyverse style guide](https://style.tidyverse.org/).  
+* Save a copy of processed data and any figures.  
+* Try to summarise some of the data.  
+
+
+# The Rmd file
+
+[Rmd file](04_reproducibility_1.Rmd)
+
+
+
+![](`r here::here("pics", "58Mend.png")`)
+
+

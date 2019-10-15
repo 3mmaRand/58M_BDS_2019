@@ -63,6 +63,8 @@ This should be revision.
 
 ### Example 1
 
+Data file: [structurepred.txt](../data/structurepred.txt)
+
 ```{r}
 file <- here::here("data", "structurepred.txt")
 mydata <- read.table(file)
@@ -86,6 +88,8 @@ str(mydata)
 * Check manual for defaults.
 
 ### Example 2
+
+Data file: [Icd10Code.csv](../data/Icd10Code.csv)
 
 ```{r error = TRUE}
 file <- here::here("data", "Icd10Code.csv")
@@ -133,6 +137,8 @@ mydata <- read.table(file, header = TRUE, sep = ",")
 * Google is your friend.  
 
 ### SPSS example using `haven`
+
+Data file: [prac9a.sav](../data/prac9a.sav)
 
 ```{r}
 library(haven)
@@ -227,17 +233,17 @@ Many organisations provide an API (application program interface) to access thei
 
 Many packages have been written that make use of APIs and make your life much easier.
 
-[Bioconductor] (https://www.bioconductor.org/) is a whole ecosystem of R tools to analyse high-throughput genomic data and access public repositories. They are available from Bioconductor rather than CRAN. To install Bioconductor packages on your own computer you will need to install `BiocManager` from CRAN then use `BiocManager::install("packagename")`.
+[Bioconductor](https://www.bioconductor.org/) is a whole ecosystem of R tools to analyse high-throughput genomic data and access public repositories. They are available from Bioconductor rather than CRAN. To install Bioconductor packages on your own computer you will need to install `BiocManager` from CRAN then use `BiocManager::install("packagename")`.
  
 [ropensci](https://ropensci.org/) is a curated set of R packages that provide programmatic access to a variety of scientific data,  full-text of journal articles, and metrics of scholarly impact.
 
-Not every API will have an available package but may be JSON-based APIs meaning they return data in JSON format. One example is Twitter. The `jsonlite` package
+Not every API will have an available package but may be JSON-based APIs meaning they return data in JSON format. One example is Twitter. The `jsonlite` package is very useful to deal with such data. [Examples, including Twitter](https://cran.r-project.org/web/packages/jsonlite/vignettes/json-apis.html).
 
 # Exercises
 
 1. Local files. You may feel confident enough to skip this exercise but otherwise save these files below to your 'data' directory and read them in. Use the manual for `read.table()` to see all the options.  
 
-  * [Mammal_abundance_indices.txt](../data/Mammal_abundance_indices.txt)
+    * [Mammal_abundance_indices.txt](../data/Mammal_abundance_indices.txt)
 
 ```{r  include=FALSE, error=TRUE}
 #============== Data Import problem ==============#
@@ -254,7 +260,7 @@ mydata <- read.table(file,
 str(mydata) # that looks ok
 ``` 
 
-  * [periwinkle.txt](../data/periwinkle.txt)
+    * [periwinkle.txt](../data/periwinkle.txt)
 
 ```{r  include=FALSE, error=TRUE}
 #============== Data Import problem ==============#
@@ -270,7 +276,7 @@ mydata <- read.table(file, header = T, sep = "/")
 str(mydata) # that looks ok
 ``` 
 
-  * [structurepred.csv](../data/structurepred.csv)
+    * [structurepred.csv](../data/structurepred.csv)
 
 ```{r include=FALSE, error=TRUE}
 #============== Data Import problem ==============#
@@ -297,7 +303,7 @@ mydata <- read.csv2(file)
 str(mydata) # that looks ok
 ``` 
 
-  * [csativa.txt](../data/csativa.txt)
+    * [csativa.txt](../data/csativa.txt)
 
 ```{r include=FALSE, error=TRUE}
 #============== Data Import problem ==============#
@@ -312,7 +318,7 @@ mydata <- read.table(file, skip = 5, header = T)
 str(mydata) # that looks ok
 ``` 
 
-  * [carsdata.dta](../data/carsdata.dta)
+    * [carsdata.dta](../data/carsdata.dta)
 
 ```{r include=FALSE, error=TRUE}
 #============== Data Import problem ==============#
@@ -323,8 +329,8 @@ str(mydata) # that looks ok
 ``` 
 
 2. This is tidying exercise. Can you read in the buoy data with appropriate columns names? I suggest:  
-  * reading the first line of the file
-  * processing that line using similar methods to those used in the [case study](http://www-users.york.ac.uk/~er13/58M_BDS_2019/workshops/02_tidying_data.html#case_study_covering_some_typical_tasks) of Workshop 2: Tidying data, tidy data and the tidyverse.
+    * reading the first line of the file
+    * processing that line using similar methods to those used in the [case study](http://www-users.york.ac.uk/~er13/58M_BDS_2019/workshops/02_tidying_data.html#case_study_covering_some_typical_tasks) of Workshop 2: Tidying data, tidy data and the tidyverse.
 ```{r include=FALSE, error=TRUE}
 file <- file <- "http://www.ndbc.noaa.gov/view_text_file.php?filename=44025h2011.txt.gz&dir=data/historical/stdmet/"
 
@@ -338,6 +344,7 @@ mydata <- read.table(file, header = F,
                      col.names = vars)
 
 ```
+
 
 3. Below is a file containing flowcyometry data. Your task is to use google to find out how to read it in and develop understanding of the resulting datastructure by examining its components. You should find any packages to need are already installed but you will still need to identify and 'library' them.
 What kind object results? Where is the data itself? What is the other information? Can you plot any of the actual data - for example do the classic forward vs side scatter plot?
