@@ -1,0 +1,18 @@
+
+>Sequence	15 amino acids
+#
+# netphos-3.1b prediction results
+#
+# Sequence		   # x   Context     Score   Kinase    Answer
+# -------------------------------------------------------------------
+# Sequence                 8 Y   LESDYLARD   0.698   unsp       YES
+# Sequence                 8 Y   LESDYLARD   0.445   SRC         . 
+# Sequence                 8 Y   LESDYLARD   0.424   EGFR        . 
+# Sequence                 8 Y   LESDYLARD   0.413   INSR        . 
+#
+    QNNLESDYLARDGPS                                      #     50
+%1  .......Y.......
+
+
+Explain the output.  Go back.
+

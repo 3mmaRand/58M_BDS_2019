@@ -52,7 +52,7 @@ Workshop 3: [Advanced Data Import.](workshops/03_advanced_data_import.html)
 
 Workshop 4: [Reproducibility and an introduction to R Markdown.](workshops/04_reproducibility_1.html)
 
-Workshop 5: [Advanced R Markdown.](workshops/01_project_organisation.html)
+Workshop 5: [Advanced R Markdown.](workshops/05_advanced_rmarkdown.html)
 
 Workshop 6: [An introduction to Machine Learning.](workshops/01_project_organisation.html)
 

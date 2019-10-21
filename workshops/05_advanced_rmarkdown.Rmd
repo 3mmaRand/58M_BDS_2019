@@ -1,0 +1,161 @@
+---
+title: "Workshop 5:  Advanced R Markdown."
+author: "Emma Rand"
+output:
+  html_document:
+    toc: true
+    depth: 3
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    theme: spacelab
+  word_document: default
+bibliography: '`r here::here("refs", "references.bib")`'
+---
+
+
+![](`r here::here("pics", "58M.png")`)
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      message = FALSE,
+                      warning = FALSE)
+```
+
+```{r pkgs, include = FALSE}
+library(tidyverse)
+```
+
+
+# Introduction
+
+## Aims
+
+In this session learn how to create fully reproducible outputs in a variety of formats using R Markdown. 
+
+## Learning outcomes 
+
+The successful student will be able to:
+
+* Include objects created within text using inline coding.  
+* Include special characters in test.  
+* Use a greater variety YAML options and be aware of the variety of possible outputs.  
+* Use a greater variety of code chunk options including figure legends.  
+* Include nicely formatted tables.
+* Cite and list references using a .bib file.  
+ 
+## Start with a R markdown document.
+
+* File | New File | R Markdown.  
+* Add a title.  
+* Add your name.  
+* Delete everything except:  
+  * the YAML header between the ---
+  * the first code chunk which begins:
+  ` ```{r setup, include=FALSE} `
+
+
+## Inline code
+You can run code inline to access variables in a piece of text by putting it between  `` `r `` and `` ` `` . For example by writing in the Rmd: 
+
+The squareroot of 2 is `` `r
+sqrt(2)` `` you will get 
+
+The squareroot of 2 is  `r sqrt(2)` in the knitted output.
+
+## Special characters
+
+You can include special characters in a markdown document using LaTeX markup. This has \$ signs on the outside and uses backslashes and curly braces to indicate that what follows should be interpreted as a special character with special formatting.
+For example, to get $\bar{x} \pm s.e.$ you write ` $\bar{x} \pm s.e.$ `
+
+## Example
+
+We will read in [ecoli.txt](../data/ecoli.txt) and summarise it for reporting in text. These data are from an investigation of the growth of three E.coli strains on four different media. The data are measures of optical density (in arbitrary units) which gives an indication of the number of cells in the medium.
+
+Add a chunk to read the data in:
+
+```{r}
+file <- here::here("data", "ecoli.txt")
+ecoli <- read.table(file, header = TRUE)
+```
+
+Add a chunk summarise it:
+
+```{r}
+ecolisum <- ecoli %>% 
+  group_by(Strain, medium) %>% 
+  summarise(mean_od = mean(dens),
+            n_od  = length(dens),
+            sd_od = sd(dens),
+            se_od = sd(dens)/sqrt(n_od))
+```
+
+To report this you could write:
+
+The optical density of strain `` `r
+ecolisum$Strain[1]` ``
+on `` `r
+ecolisum$medium[1]` `` is `` `r
+ecolisum$mean_od[1]` `` `$\pm$` `` `r
+ecolisum$sd_od[1]` ``.
+
+Which would give you:
+
+The optical density of strain `r ecolisum$Strain[1]` on `r ecolisum$medium[1]` is `r ecolisum$mean_od[1]` $\pm$ `r ecolisum$sd_od[1]`.
+
+You would probably want to include code for rounding appropriately.
+
+## Tables
+
+There are several options for formatting tables. I tend to use
+`knitr::kable()` with the [`kableExtra`](https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html#table_styles) package [@kableExtra] or the `flextable` package [@flextable]. These both take a dataframe as an input.
+
+```{r}
+library(kableExtra)
+```
+
+```{r}
+ecolisum %>% 
+  knitr::kable(caption = "Summary statistics for experiment",
+               col.names = c("Strain", 
+                             "Medium", 
+                             "Mean", 
+                             "N",
+                             "Stdev",
+                             "Stder"),
+               digits = 2) %>%
+  kable_styling() %>% 
+  add_header_above(c(" " = 2, "Optical Density" = 4)) %>% 
+  kable_styling(bootstrap_options = c("striped", "condensed"),
+                font_size = 11)
+
+```
+
+
+
+# Exercise
+
+Either:
+
+1. continue working with the example in Workshop 2: [Tidying data and the tidyverse.](workshops/02_tidying_data.html) and Workshop 4: [Reproducibility and an introduction to R Markdown.](workshops/04_reproducibility_1.html) to develop a report generated through R Markdown. The data are in [Y101_Y102_Y201_Y202_Y101-5.csv](../data/Y101_Y102_Y201_Y202_Y101-5.csv). 
+
+2. Start working with your own assessment.  
+
+Do:
+
+* Continue to follow the good practice in [Reproducibility and an introduction to R Markdown.](workshops/04_reproducibility_1.html) to organise and document your analysis.  
+* Report summary information about the dataset in the text reproducibily using inline coding, tables and figures.  
+* Use references and a .bib file.  
+* Try a RMarkdown template.  
+
+R Markdown: The Definitive Guide is a good reference [@markdown2]
+
+# The Rmd file
+
+[Rmd file](05_advanced_rmarkdown.Rmd)
+
+
+
+![](`r here::here("pics", "58Mend.png")`)
+
+

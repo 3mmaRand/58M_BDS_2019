@@ -32,7 +32,7 @@ library(tidyverse)
 
 ## Aims
 
-The aim of this session is to strength your ability to import your own data files regardless of the formatting and to introduce you to some of the other ways to import data such as from googlesheets, through webscrapping and via APIs.
+The aim of this session is to strength your ability to import your own data files regardless of the formatting and to introduce you to some of the other ways to import data such as from googlesheets, through web scraping and via APIs.
 
 ## Learning outcomes 
 
@@ -40,8 +40,8 @@ The successful student will be able to:
 
 * use an understanding of what matters in their data import  
 * import plain text and proprietary data formats stored locally and on the web  
-* carry out some simple web scaping  
-* start to appreciate the number of packages available for importing publically accessible data
+* carry out some simple web scraping  
+* start to appreciate the number of packages available for importing publicly accessible data
  
 ## Four aspects.
 * Where: stored locally (on your own computer) or remotely (on another computer/server).  
@@ -98,7 +98,7 @@ mydata <- read.table(file, header = TRUE)
 
 <font size="5"> `r emo::ji("unhappy")`</font> The command won't run at all.
 
-* This is common error when the separtor is not the default.
+* This is common error when the separator is not the default.
 * Troubleshoot by reading in one line.
 
 Read in the first line only:
@@ -196,9 +196,9 @@ coloursurvey <- gs_read(colours)
 
 ## Web scraping
 
-What if data are not in a file but on webpage? One solution is to  to 'scrape' the data using package rvest. This is just one samll example of a big topic.
+What if data are not in a file but on webpage? One solution is to  to 'scrape' the data using package rvest. This is just one small example of a big topic.
 
-We are going to get the information from a wikipedia page on [Global biodiversity](https://en.wikipedia.org/wiki/Global_biodiversity). We will need to retrieve the html (i.e., the page source) and find the the part of the source which contains the table information.
+We are going to get the information from a Wikipedia page on [Global biodiversity](https://en.wikipedia.org/wiki/Global_biodiversity). We will need to retrieve the html (i.e., the page source) and find the the part of the source which contains the table information.
 
 * Go to the web page: https://en.wikipedia.org/wiki/Global_biodiversity 
 * Find the table for the population to extract.
@@ -346,7 +346,7 @@ mydata <- read.table(file, header = F,
 ```
 
 
-3. Below is a file containing flowcyometry data. Your task is to use google to find out how to read it in and develop understanding of the resulting datastructure by examining its components. You should find any packages to need are already installed but you will still need to identify and 'library' them.
+3. Below is a file containing flowcyometry data. Your task is to use google to find out how to read it in and develop understanding of the resulting data structure by examining its components. You should find any packages to need are already installed but you will still need to identify and 'library' them.
 What kind object results? Where is the data itself? What is the other information? Can you plot any of the actual data - for example do the classic forward vs side scatter plot?
 
 The data: [Specimen_001_Tube_001_001.fcs](../data/Specimen_001_Tube_001_001.fcs)
@@ -369,7 +369,7 @@ ggplot(data = expdat, aes(x = FSC.A, y = SSC.A)) +
 ```
 4. Can you work out how to read in all the files of the same format in a particular directory? You could try to read them into separate dataframes or a single dataframe. A collection of suitable files is [specdata.zip](../data/specdata.zip) which you could download and unzip. 
 
-If you're stuck, here is one fucntion I wrote:  [em_read_list.R](../functions/em_read_list.R). Work out how to use it from the code in that file.
+If you're stuck, here is one function I wrote:  [em_read_list.R](../functions/em_read_list.R). Work out how to use it from the code in that file.
 
 
 5. Browse the [Bioconductor Workflow Packages](https://www.bioconductor.org/packages/release/workflows/). These are analysis packages which include a detailed example workflow.
