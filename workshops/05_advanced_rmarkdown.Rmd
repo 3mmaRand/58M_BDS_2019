@@ -54,6 +54,15 @@ The successful student will be able to:
   * the first code chunk which begins:
   ` ```{r setup, include=FALSE} `
 
+## Formatting
+
+* `*italic*` and `**bold**` to gives you *italic* and **bold**.  
+* `>` 
+
+> creates a block quote
+
+* `[My module page](http://www-users.york.ac.uk/~er13/58M_BDS_2019/)` gives you [My module page](http://www-users.york.ac.uk/~er13/58M_BDS_2019/)
+
 
 ## Inline code
 You can run code inline to access variables in a piece of text by putting it between  `` `r `` and `` ` `` . For example by writing in the Rmd: 
@@ -124,13 +133,28 @@ ecolisum %>%
                              "Stdev",
                              "Stder"),
                digits = 2) %>%
-  kable_styling() %>% 
-  add_header_above(c(" " = 2, "Optical Density" = 4)) %>% 
   kable_styling(bootstrap_options = c("striped", "condensed"),
-                font_size = 11)
+                font_size = 11) %>% 
+  add_header_above(c(" " = 2, "Optical Density" = 4))
 
 ```
 
+## References
+
+* A references list can be added by creating a .bib file containing references in BibTeX format and another line to the YAML header.  
+  * `citation("package")` in the console will give packages references in BibTeX format.  
+  * BibTeX format is also available through most referencing software (e.g., PaperPile).
+  * the YAML line is `bibliography: mybibfile.bib` where the file can be specified using inline code: ``  '`r
+  here::here("refs", "mybibfile.bib")`' ``  
+* Citations are added using:
+  *  statement `[@Codd1990-th]` for statement [@Codd1990-th].    
+  *  Codd `[-@Codd1990-th]` said for Codd [-@Codd1990-th] said.  
+* Every citation used results in the reference being added to a list at the bottomof te output.
+
+
+## Rticles and other packages
+
+Demo
 
 
 # Exercise
@@ -148,7 +172,10 @@ Do:
 * Use references and a .bib file.  
 * Try a RMarkdown template.  
 
-R Markdown: The Definitive Guide is a good reference [@markdown2]
+# Good references for R Markdonw
+
+[R Markdown: The Definitive Guide](https://bookdown.org/yihui/rmarkdown/) [@markdown2]
+[RStudio's Guide](https://rmarkdown.rstudio.com/lesson-1.html)
 
 # The Rmd file
 
