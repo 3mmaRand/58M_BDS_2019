@@ -38,7 +38,7 @@ In this session learn how to create fully reproducible outputs in a variety of f
 The successful student will be able to:
 
 * Include objects created within text using inline coding.  
-* Include special characters in test.  
+* Include special characters in text.  
 * Use a greater variety YAML options and be aware of the variety of possible outputs.  
 * Use a greater variety of code chunk options including figure legends.  
 * Include nicely formatted tables.
