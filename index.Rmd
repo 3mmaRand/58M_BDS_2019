@@ -54,7 +54,7 @@ Workshop 4: [Reproducibility and an introduction to R Markdown.](workshops/04_re
 
 Workshop 5: [Advanced R Markdown.](workshops/05_advanced_rmarkdown.html)
 
-Workshop 6: [An introduction to Machine Learning.](workshops/01_project_organisation.html)
+Workshop 6: [An introduction to Machine Learning.](workshops/06_machine_learning.html)
 
 Workshop 7: [Project work](workshops/01_project_organisation.html)
 

@@ -1,0 +1,238 @@
+---
+title: "Workshop 5:  Advanced R Markdown."
+author: "Emma Rand"
+output:
+  html_document:
+    toc: true
+    depth: 3
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    theme: spacelab
+  word_document: default
+bibliography: '`r here::here("refs", "references.bib")`'
+---
+
+
+![](`r here::here("pics", "58M.png")`)
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      message = FALSE,
+                      warning = FALSE)
+```
+
+```{r pkgs, include = FALSE}
+library(tidyverse)
+```
+
+
+# Introduction
+
+## Aims
+
+In this session you will get an introduction to machine learning in general and in applying and interpreting some machine learning methods. You should also have time to experiment with your own data. 
+
+## Learning outcomes 
+
+The successful student will be able to:
+
+* Describe what is meant by machine learning.  
+* .  
+* .  
+* .  
+* .
+* .  
+
+# Overivew.
+
+## What is the difference between ML and statistics?
+
+There isn’t really one! But perhaps ...
+
+* Statistics.  
+  * Goal is understanding: variable significance.  
+  * Parsimonious models: penalties for complexity, Interpretability is important.  
+  * Model entire data set.  
+
+* Machine learning.  
+  * Goal is more often prediction: reliability of predictions.  
+  * How predictions arise is less important.  
+  * Often complex models: no penalties for complexity.  
+  * Train on ~75% data, test on 25%.  
+ 
+## Main types.
+
+One of the main ways in which ML methods can be classified is as supervised or unsupervised.
+
+* Supervised:  
+  * We have a known response.
+  * Model created through training set (~75%) with known response.
+  * Model tested on test set (~25%). 
+
+* Unsupervised:
+  * No particular response; input is unlabelled. 
+  * Goal is to discover structure.
+  * Can be used to explore or reduce or transform variables before supervised methods. 
+
+## Unsupervised methods.  
+
+Very common examples:
+
+* Clustering ( >1 method)
+  * Goal: find natural groupings which may suggest hypotheses.
+  * Based on distance measures.
+  * Clustering algorithms vary in 1. distance measure and 2. Clustering algorithm.
+  * Hierarchical - either successive agglomeration or successive division.
+  * Illustrated with dendrogram.
+
+* Dimension reduction e.g., PCA, tSNE
+  * New variables which are combinations of the original variables.
+  * Summarise overall pattern of variation.
+  * See the pattern of correlation between variables.
+  * See similarities among observations.
+
+## Supervised methods.
+
+Often intended to classify observations. Many, many variations for example:
+
+* Linear and logistic regression.
+* Linear Discriminant Analysis (LDA). 
+* Support-Vector Machines (SVM).
+* Decision trees.
+* Naive Bayes.
+* K nearest neighbour.
+
+# Examples
+
+Getting started.
+
+* Create a new project.
+* Make a folder for data.
+* Create a new markdown document.
+  * File | New File | R Markdown.  
+  * Add a title.  
+  * Add your name.  
+  * Delete everything except:  
+    * the YAML header between the ---
+    * the first code chunk which begins:
+    ` ```{r setup, include=FALSE} `
+
+## Example: Clustering
+
+The Wheat Seeds Dataset involves the prediction of species given measurements of seed kernals from different varieties of wheat.
+
+There are three different varieties of wheat: Kama, Rosa and Canadian. High quality visualization of the internal kernel structure was detected using a soft X-ray technique. 
+
+Area.
+Perimeter.
+Compactness
+Length of kernel.
+Width of kernel.
+Asymmetry coefficient.
+Length of kernel groove.
+Class (1, 2, 3).
+
+```{r}
+file <- here::here("data", "seeds_dataset.txt")
+cols <- c("area", 
+          "perimeter",
+          "compactness",
+          "kernal_length",
+          "kernal_width",
+          "asymmetry_coef",
+          "groove_length",
+          "species")
+seeds <- read.table(file, header = FALSE, col.names = cols)
+
+seeds$species <- recode(seeds$species,
+                        `1` = "Kama",
+                        `2` = "Rosa",
+                        `3` = "Canadian")
+
+```
+Clustering is one way to see if these variables could be used to distinguish between species. If they do, we would expect individuals of the same species to cluster together. 
+We first create a matrix of the distances between observations using `dist()`, then use those distances for clustering with `hclust()`:
+
+```{r}
+clust <- seeds %>% 
+  select(-species) %>% 
+  dist() %>% 
+  hclust(method = "complete")
+
+```
+Then we can plot the result:
+```{r}
+plot(clust)
+```
+
+Since I like `ggplot`, I will convert the output of `hclust` to a list of dataframes that `ggplot` can use using another package, `ggdendro` 
+
+```{r}
+library(ggdendro)
+```
+
+Now we can use the `dendro_data()` function on our hclust output. Open the manual page for `dendro_data()`
+```{r}
+ddata <- dendro_data(clust, type = "rectangle")
+```
+
+And plot it:
+```{r warning = FALSE, message = FALSE}
+
+ggplot() + 
+  geom_segment(data = ddata$segments, 
+               aes(x = x, y = y, xend = xend, yend = yend)) + 
+  coord_flip() + 
+  scale_y_reverse()
+```
+
+* How many clusters do you think exist
+* If you had to identify 3 clusters (one for each species) where would they be?
+* Does this match the reality? Add the species labels by adding a geom to the plot: `geom_text(data = ddata$labels, aes(x = x, y = y - 0.8,label = seed$species), size = 2)`
+
+
+```{r}
+ggplot() + 
+  geom_segment(data = ddata$segments, 
+               aes(x = x, y = y, xend = xend, yend = yend)) + 
+  geom_text(data = ddata$labels, 
+            aes(x = x, y = y - 0.8,
+                label = seeds$species,
+                colour = seeds$species),
+            size = 2) + 
+  coord_flip() + 
+  scale_y_reverse()
+```
+This is not entirely useful with there being so many but you should still be able to see if your thoughts about where the three clusters are match the actual groups.
+
+* What do you conclude about the ability of this unsupervised method to separate these species on measurements of their sepal and petal width/length?
+
+
+
+# Exercise
+
+Either:
+
+1. continue working with the example in Workshop 2: [Tidying data and the tidyverse.](workshops/02_tidying_data.html) and Workshop 4: [Reproducibility and an introduction to R Markdown.](workshops/04_reproducibility_1.html) to develop a report generated through R Markdown. The data are in [Y101_Y102_Y201_Y202_Y101-5.csv](../data/Y101_Y102_Y201_Y202_Y101-5.csv). 
+
+2. Start working with your own assessment.  
+
+Do:
+
+* Continue to follow the good practice in [Reproducibility and an introduction to R Markdown.](workshops/04_reproducibility_1.html) to organise and document your analysis.  
+* Report summary information about the dataset in the text reproducibily using inline coding, tables and figures.  
+* Use references and a .bib file.  
+* Try a RMarkdown template.  
+
+# Good references 
+
+# The Rmd file
+
+[Rmd file](06_machine_learning.Rmd)
+
+
+
+![](`r here::here("pics", "58Mend.png")`)
+
+
