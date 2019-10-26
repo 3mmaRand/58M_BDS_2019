@@ -1,5 +1,5 @@
 ---
-title: "Workshop 5:  Advanced R Markdown."
+title: "Workshop 6:  An Introduction to Machine Learning."
 author: "Emma Rand"
 output:
   html_document:
@@ -77,6 +77,7 @@ One of the main ways in which ML methods can be classified is as supervised or u
 
 ## Unsupervised methods.  
 
+Often used to explore and visualise datasets with many variables.
 Very common examples:
 
 * Clustering ( >1 method)
@@ -118,20 +119,19 @@ Getting started.
     * the first code chunk which begins:
     ` ```{r setup, include=FALSE} `
 
-## Example: Clustering
+## Example.
 
 The Wheat Seeds Dataset involves the prediction of species given measurements of seed kernals from different varieties of wheat.
 
-There are three different varieties of wheat: Kama, Rosa and Canadian. High quality visualization of the internal kernel structure was detected using a soft X-ray technique. 
+There are three different varieties of wheat: Kama, Rosa and Canadian. High quality visualization of the internal kernel structure was detected using a soft X-ray technique and 7 measurements were taken:
 
-Area.
-Perimeter.
-Compactness
-Length of kernel.
-Width of kernel.
-Asymmetry coefficient.
-Length of kernel groove.
-Class (1, 2, 3).
+  * Area.
+  * Perimeter.
+  * Compactness
+  * Length of kernel.
+  * Width of kernel.
+  * Asymmetry coefficient.
+  * Length of kernel groove.
 
 ```{r}
 file <- here::here("data", "seeds_dataset.txt")
@@ -144,13 +144,26 @@ cols <- c("area",
           "groove_length",
           "species")
 seeds <- read.table(file, header = FALSE, col.names = cols)
+```
 
+The species is coded as 1, 2, and 3 and it would be useful to recode to the species names:
+
+```{r}
 seeds$species <- recode(seeds$species,
                         `1` = "Kama",
                         `2` = "Rosa",
                         `3` = "Canadian")
-
 ```
+
+If you have about 4 - 15 variables, plotting them pairwise against each other gives a niove overview. This can be achieved with the `ggpairs()` from the `GGally` package.
+
+```{r}
+seeds %>% 
+  GGally::ggpairs() 
+```
+
+### Clustering
+
 Clustering is one way to see if these variables could be used to distinguish between species. If they do, we would expect individuals of the same species to cluster together. 
 We first create a matrix of the distances between observations using `dist()`, then use those distances for clustering with `hclust()`:
 
@@ -200,13 +213,140 @@ ggplot() +
             aes(x = x, y = y - 0.8,
                 label = seeds$species,
                 colour = seeds$species),
-            size = 2) + 
+            size = 1) + 
   coord_flip() + 
   scale_y_reverse()
 ```
 This is not entirely useful with there being so many but you should still be able to see if your thoughts about where the three clusters are match the actual groups.
 
 * What do you conclude about the ability of this unsupervised method to separate these species on measurements of their sepal and petal width/length?
+
+### Principal Components Analysis.
+
+Principal Components Analysis (PCA) is another method to investigate whether you have groups or patterns in a dataset. It is 'data reduction' or 'dimension reduction' method and creates a set of 'components' (axes) which are linear combinations of the original variables. PCA is useful when relatively few components are needed to capture most of the variation in the data.
+
+
+```{r}
+pca <- seeds %>% 
+  select(-species) %>% 
+  prcomp(scale. = TRUE)
+```
+
+**Scaling**: When the values in one variable are much bigger than in others we usually scale all the variable (mean of zero and a unit variance) before undertaking PCA to avoid the variable with the biggest values dominating the analysis.
+To see the variance accounted for by each component
+```{r}
+summary(pca)
+```
+To see the importance (loading) of each variable in each component
+```{r}
+pca$rotation
+```
+To plot, we might want to use the scores on each of the new axes and colour them by species. The scores are in a variable called $x
+```{r}
+# For convenience, I'll put these in one 'tidy' dataframe
+pca_labelled <- data.frame(pca$x, species = seeds$species)
+# a then to do a scatterplot
+ggplot(pca_labelled, aes(x = PC1, y = PC2, color = species))+
+  geom_point()
+```
+
+### LDA 
+
+Linear Discriminant Analysis aims to find linear combination of variables the maximise differences between groups. It is supervised because we label observations by their class and determine the allocation rules based on these. A 'discriminant' is a line that separates groups. As there are three classes we have at most two linear discriminants.
+
+```{r}
+
+ldaout <- seeds %>% 
+  select(-species) %>% 
+  MASS::lda(grouping = seeds$species)
+```
+
+To determine how well the species were predicted the scores on LD1 and LD2 and the classes need to be predicted: 
+
+```{r results = "hide", warning = FALSE, message = FALSE}
+pldaout <- predict(object = ldaout,
+                newdata = iris[,1:4])
+# how many predicted classes are the same as the actual classes
+table(pldaout$class == iris[,5])
+
+```
+
+* How well do you think the species were predicted?
+
+We can create a scatter plot of LD1 and LD2 just like we did for PC1 and PC2:
+
+```{r warning = FALSE, message = FALSE}
+
+#we add the labels of the original and class prediction
+ldaout_labelled <- data.frame(pldaout$x,iris[5],pldaout$class)
+# a then to do a scatterplot
+ggplot(ldaout_labelled,aes(x = LD1, y= LD2, color= Species))+
+  geom_point()
+```
+
+* Do you think the LDA gives better separation of groups than PCA?
+
+* Can you find a way to display the incorrectly predicted groups?
+
+```{r echo = FALSE, results = "hide", warning = FALSE, message = FALSE}
+#we add a true/false variable that indicates whether the predictions match the reality
+indic <- pldaout$class == iris[,5]
+ldaout_labelled <- data.frame(ldaout_labelled,correct=indic)
+#then split the dataframe on that variable
+wrong <- data.frame(split(ldaout_labelled,indic)$`FALSE`)
+# and plot the incorrect classifications
+g <- ggplot()+
+  geom_point(data = ldaout_labelled,aes(x = LD1, y= LD2, color= Species))+
+  geom_point(data= wrong, aes(x = LD1, y= LD2), color= "black", size=3)
+
+
+```
+
+
+### Testing
+
+We used the same data to train the LDA model as we used to examine its performance. Only three cases were in correctly classified. But this isn't very robust - we could have overfitting.
+
+A key part of using ML methods to make predictions is to test how good those predictions are. This is typically done by training the model on about 75% of your data and then testing it on the remainder.
+
+The caret package includes functions to help with this (as well as lots of ML algorithms). The name comes from *C*lassification *A*nd *RE*gression *T*raining
+
+```{r warning = FALSE, message = FALSE}
+library(caret)
+```
+
+Split the dataset in to training and testing sets using `createDataPartition()` 
+
+It returns a proportion of row numbers randomly sampled from the dataframe. Since it returns a list (of one item) I've added [[1]] to select that list element so I have a vector to work with.
+
+```{r warning = FALSE, message = FALSE}
+ids <- createDataPartition(y = iris$Species, p = 0.75)[[1]]
+str(ids)
+
+```
+Now use those row numbers to create the training and test datasets.
+```{r warning = FALSE, message = FALSE}
+train <- iris[ids,] # those rows only
+test <- iris[-ids,] # without those rows
+```
+Perform the lda on the training data and test on the test data
+```{r warning = FALSE, message = FALSE}
+# train
+ldaout <- lda(train[,1:4], train[,5])
+
+# test
+# predict classes of the test data based on lda model
+pldaout <- predict(ldaout, test[,1:4])
+```
+
+* Evaluate the model performance by comparing the predicted classes to the actual classes.
+```{r echo = FALSE, results = "hide", warning = FALSE, message = FALSE}
+# compare the predicted classes the actual classes
+table(pldaout$class == test[,5])
+# I got 2 misclassified. You may have had greater or fewer
+```
+
+
 
 
 
