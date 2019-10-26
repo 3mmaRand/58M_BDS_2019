@@ -37,14 +37,13 @@ In this session you will get an introduction to machine learning in general and 
 
 The successful student will be able to:
 
-* Describe what is meant by machine learning.  
-* .  
-* .  
-* .  
-* .
-* .  
+* Describe what is meant by machine learning the primary way to classify ML methods.  
+* Know a few supervised and unsupervised methods.  
+* Be apply to apply, visualise and interpret clustering, PCA and LDA. 
+* Be able to partition datasets to train and test ML models on different sets of observations.  
+  
 
-# Overivew.
+# Overview.
 
 ## What is the difference between ML and statistics?
 
@@ -71,7 +70,7 @@ One of the main ways in which ML methods can be classified is as supervised or u
   * Model tested on test set (~25%). 
 
 * Unsupervised:
-  * No particular response; input is unlabelled. 
+  * No particular response; input is unlabeled. 
   * Goal is to discover structure.
   * Can be used to explore or reduce or transform variables before supervised methods. 
 
@@ -121,7 +120,7 @@ Getting started.
 
 ## Example.
 
-The Wheat Seeds Dataset involves the prediction of species given measurements of seed kernals from different varieties of wheat.
+The Wheat Seeds Dataset involves the prediction of species given measurements of seed kernels from different varieties of wheat.
 
 There are three different varieties of wheat: Kama, Rosa and Canadian. High quality visualization of the internal kernel structure was detected using a soft X-ray technique and 7 measurements were taken:
 
@@ -139,7 +138,7 @@ cols <- c("area",
           "perimeter",
           "compactness",
           "kernal_length",
-          "kernal_width",
+          "kernel_width",
           "asymmetry_coef",
           "groove_length",
           "species")
@@ -155,7 +154,7 @@ seeds$species <- recode(seeds$species,
                         `3` = "Canadian")
 ```
 
-If you have about 4 - 15 variables, plotting them pairwise against each other gives a niove overview. This can be achieved with the `ggpairs()` from the `GGally` package.
+If you have about 4 - 15 variables, plotting them pairwise against each other gives a nice overview. This can be achieved with the `ggpairs()` from the `GGally` package.
 
 ```{r}
 seeds %>% 
@@ -217,6 +216,7 @@ ggplot() +
   coord_flip() + 
   scale_y_reverse()
 ```
+
 This is not entirely useful with there being so many but you should still be able to see if your thoughts about where the three clusters are match the actual groups.
 
 * What do you conclude about the ability of this unsupervised method to separate these species on measurements of their sepal and petal width/length?
@@ -263,55 +263,48 @@ ldaout <- seeds %>%
 
 To determine how well the species were predicted the scores on LD1 and LD2 and the classes need to be predicted: 
 
-```{r results = "hide", warning = FALSE, message = FALSE}
-pldaout <- predict(object = ldaout,
-                newdata = iris[,1:4])
-# how many predicted classes are the same as the actual classes
-table(pldaout$class == iris[,5])
-
+```{r}
+pldaout <- seeds %>% 
+  select(-species) %>%
+  predict(object = ldaout)
 ```
 
-* How well do you think the species were predicted?
+How many predicted classes are the same as the actual classes:
+
+```{r}
+table(predicted = pldaout$class, observed = seeds$species)
+```
+
+How well do you think the species were predicted?
 
 We can create a scatter plot of LD1 and LD2 just like we did for PC1 and PC2:
 
-```{r warning = FALSE, message = FALSE}
+```{r}
 
 #we add the labels of the original and class prediction
-ldaout_labelled <- data.frame(pldaout$x,iris[5],pldaout$class)
+ldaout_labelled <- data.frame(pldaout$x,
+                              observed_species = seeds$species,
+                              predicted_species = pldaout$class)
+ldaout_labelled$match <- ldaout_labelled$observed_species == ldaout_labelled$predicted_species
 # a then to do a scatterplot
-ggplot(ldaout_labelled,aes(x = LD1, y= LD2, color= Species))+
+ggplot(ldaout_labelled, aes(x = LD1, y = LD2, 
+                            colour = observed_species,
+                            shape = match)) +
   geom_point()
 ```
 
-* Do you think the LDA gives better separation of groups than PCA?
-
-* Can you find a way to display the incorrectly predicted groups?
-
-```{r echo = FALSE, results = "hide", warning = FALSE, message = FALSE}
-#we add a true/false variable that indicates whether the predictions match the reality
-indic <- pldaout$class == iris[,5]
-ldaout_labelled <- data.frame(ldaout_labelled,correct=indic)
-#then split the dataframe on that variable
-wrong <- data.frame(split(ldaout_labelled,indic)$`FALSE`)
-# and plot the incorrect classifications
-g <- ggplot()+
-  geom_point(data = ldaout_labelled,aes(x = LD1, y= LD2, color= Species))+
-  geom_point(data= wrong, aes(x = LD1, y= LD2), color= "black", size=3)
+Do you think the LDA gives better separation of groups than PCA?
 
 
-```
+#### Training and Testing
 
-
-### Testing
-
-We used the same data to train the LDA model as we used to examine its performance. Only three cases were in correctly classified. But this isn't very robust - we could have overfitting.
+We used the same data to train the LDA model as we used to examine its performance. Only seven cases were in correctly classified. But this isn't very robust - we could have overfitting.
 
 A key part of using ML methods to make predictions is to test how good those predictions are. This is typically done by training the model on about 75% of your data and then testing it on the remainder.
 
-The caret package includes functions to help with this (as well as lots of ML algorithms). The name comes from *C*lassification *A*nd *RE*gression *T*raining
+The caret package includes functions to help with this (as well as lots of ML algorithms). The name comes from *C*classification *A*nd *RE*gression *T*raining
 
-```{r warning = FALSE, message = FALSE}
+```{r}
 library(caret)
 ```
 
@@ -319,34 +312,40 @@ Split the dataset in to training and testing sets using `createDataPartition()`
 
 It returns a proportion of row numbers randomly sampled from the dataframe. Since it returns a list (of one item) I've added [[1]] to select that list element so I have a vector to work with.
 
-```{r warning = FALSE, message = FALSE}
-ids <- createDataPartition(y = iris$Species, p = 0.75)[[1]]
+```{r}
+ids <- createDataPartition(y = seeds$species, p = 0.75)[[1]]
 str(ids)
 
 ```
 Now use those row numbers to create the training and test datasets.
-```{r warning = FALSE, message = FALSE}
-train <- iris[ids,] # those rows only
-test <- iris[-ids,] # without those rows
+```{r}
+train <- seeds[ids,] # those rows only
+test <- seeds[-ids,] # without those rows
 ```
 Perform the lda on the training data and test on the test data
-```{r warning = FALSE, message = FALSE}
+```{r}
 # train
-ldaout <- lda(train[,1:4], train[,5])
 
-# test
-# predict classes of the test data based on lda model
-pldaout <- predict(ldaout, test[,1:4])
+ldaout <- train %>% 
+  select(-species) %>% 
+  MASS::lda(grouping = train$species)
+```
+And predict classes of the test data based on lda model
+```{r}
+pldaout <- test %>% 
+  select(-species) %>%
+  predict(object = ldaout)
+
 ```
 
-* Evaluate the model performance by comparing the predicted classes to the actual classes.
-```{r echo = FALSE, results = "hide", warning = FALSE, message = FALSE}
+Evaluate the model performance by comparing the predicted classes to the actual classes.
+```{r}
 # compare the predicted classes the actual classes
-table(pldaout$class == test[,5])
-# I got 2 misclassified. You may have had greater or fewer
+table(predicted = pldaout$class, observed = test$species)
+
 ```
 
-
+I got `r table(pldaout$class == test$species)[1]` misclassified. You may have had greater or fewer.
 
 
 
@@ -354,18 +353,54 @@ table(pldaout$class == test[,5])
 
 Either:
 
-1. continue working with the example in Workshop 2: [Tidying data and the tidyverse.](workshops/02_tidying_data.html) and Workshop 4: [Reproducibility and an introduction to R Markdown.](workshops/04_reproducibility_1.html) to develop a report generated through R Markdown. The data are in [Y101_Y102_Y201_Y202_Y101-5.csv](../data/Y101_Y102_Y201_Y202_Y101-5.csv). 
+1. Start working with your own assessment.  
 
-2. Start working with your own assessment.  
+Do continue to follow the practice covered in previous workshops with respect to project organisation, coding style and reproducibility.
 
-Do:
+Or
 
-* Continue to follow the good practice in [Reproducibility and an introduction to R Markdown.](workshops/04_reproducibility_1.html) to organise and document your analysis.  
-* Report summary information about the dataset in the text reproducibily using inline coding, tables and figures.  
-* Use references and a .bib file.  
-* Try a RMarkdown template.  
+2. Continue working with the example in Workshop 2: [Tidying data and the tidyverse.](workshops/02_tidying_data.html) and Workshop 4: [Reproducibility and an introduction to R Markdown.](workshops/04_reproducibility_1.html) to develop a report generated through R Markdown. So that you can focus on applying the methods from this workshop, a processed form of the data are in [sol.txt](../data/sol.txt). Note that like the raw data file, these are organised with samples in columns and proteins in rows. In order use the genes are variables and the samples as observations, we will need to transpose the data. 
 
-# Good references 
+Import: 
+```{r}
+file <- here::here("data", "sol.txt")
+sol <- read.table(file, header = TRUE)
+names(sol)
+```
+We can see that the genename is in the first column. 
+
+Transpose all the values except the genename:
+```{r}
+tsol <- sol %>% 
+  select(-genename) %>% 
+  t() %>% 
+  data.frame()
+```
+
+Use the genenames in `sol` to name the columns in `tsol`:
+```{r}
+names(tsol) <- sol$genename
+```
+
+The the column names of `sol` have become the row names of `tsol`. We can add a column for these as well.
+
+```{r}
+tsol$sample <- row.names(tsol)
+```
+
+And process the sample name so we have the cell lineage in one column and the replicate in another
+```{r}
+tsol <- tsol %>% 
+  extract(sample, 
+          c("lineage","rep"),
+          "(Y[0-9]{3,4})\\_([A-C])")
+```
+
+Now the data should be in a format to which you can apply the methods in this workshop.
+
+
+
+
 
 # The Rmd file
 
