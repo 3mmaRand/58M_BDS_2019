@@ -121,7 +121,7 @@ Getting started.
 
 ## Example.
 
-The Wheat Seeds Dataset involves the prediction of species given measurements of seed kernels from different varieties of wheat.
+The [Wheat Seeds Dataset](../data/seeds_dataset.txt) involves the prediction of species given measurements of seed kernels from different varieties of wheat.
 
 There are three different varieties of wheat: Kama, Rosa and Canadian. High quality visualization of the internal kernel structure was detected using a soft X-ray technique and 7 measurements were taken:
 

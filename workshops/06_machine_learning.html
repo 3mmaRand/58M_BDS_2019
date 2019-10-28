@@ -1661,7 +1661,7 @@ div.tocify {
 </ul>
 <div id="example." class="section level2">
 <h2>Example.</h2>
-<p>The Wheat Seeds Dataset involves the prediction of species given measurements of seed kernels from different varieties of wheat.</p>
+<p>The <a href="../data/seeds_dataset.txt">Wheat Seeds Dataset</a> involves the prediction of species given measurements of seed kernels from different varieties of wheat.</p>
 <p>There are three different varieties of wheat: Kama, Rosa and Canadian. High quality visualization of the internal kernel structure was detected using a soft X-ray technique and 7 measurements were taken:</p>
 <ul>
 <li>Area.</li>
@@ -1817,7 +1817,7 @@ ggplot(ldaout_labelled, aes(x = LD1, y = LD2,
 <p>It returns a proportion of row numbers randomly sampled from the dataframe. Since it returns a list (of one item) I’ve added [[1]] to select that list element so I have a vector to work with.</p>
 <pre class="r"><code>ids &lt;- createDataPartition(y = seeds$species, p = 0.75)[[1]]
 str(ids)</code></pre>
-<pre><code>##  int [1:159] 1 2 3 4 6 7 8 10 11 12 ...</code></pre>
+<pre><code>##  int [1:159] 1 2 3 4 6 8 9 10 11 12 ...</code></pre>
 <p>Now use those row numbers to create the training and test datasets.</p>
 <pre class="r"><code>train &lt;- seeds[ids,] # those rows only
 test &lt;- seeds[-ids,] # without those rows</code></pre>
@@ -1836,10 +1836,10 @@ ldaout &lt;- train %&gt;%
 table(predicted = pldaout$class, observed = test$species)</code></pre>
 <pre><code>##           observed
 ## predicted  Canadian Kama Rosa
-##   Canadian       17    2    0
-##   Kama            0   14    0
-##   Rosa            0    1   17</code></pre>
-<p>I got 3 misclassified. You may have had greater or fewer.</p>
+##   Canadian       16    1    0
+##   Kama            1   16    0
+##   Rosa            0    0   17</code></pre>
+<p>I got 2 misclassified. You may have had greater or fewer.</p>
 </div>
 </div>
 </div>
