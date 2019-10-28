@@ -117,6 +117,7 @@ Getting started.
     * the YAML header between the ---
     * the first code chunk which begins:
     ` ```{r setup, include=FALSE} `
+  * Add a chunk for packages and include `tidyverse`
 
 ## Example.
 
@@ -178,7 +179,7 @@ Then we can plot the result:
 plot(clust)
 ```
 
-Since I like `ggplot`, I will convert the output of `hclust` to a list of dataframes that `ggplot` can use using another package, `ggdendro` 
+Since I like `ggplot`, I will convert the output of `hclust` to a list of dataframes that `ggplot` can use using another package, `ggdendro`. Add this package to your packages chunk. 
 
 ```{r}
 library(ggdendro)
@@ -253,6 +254,7 @@ ggplot(pca_labelled, aes(x = PC1, y = PC2, color = species))+
 ### LDA 
 
 Linear Discriminant Analysis aims to find linear combination of variables the maximise differences between groups. It is supervised because we label observations by their class and determine the allocation rules based on these. A 'discriminant' is a line that separates groups. As there are three classes we have at most two linear discriminants.
+the `lda()` function is in a package called `MASS`. I very rarely load MASS with a library command since it has a function called select that conflicts with `dplyr`'s `select()`. Thus I will use `MASS::` to access its functions.
 
 ```{r}
 
