@@ -1,0 +1,73 @@
+---
+title: "Workshop 7:  Project Resources."
+author: "Emma Rand"
+output:
+  html_document:
+    toc: true
+    depth: 3
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    theme: spacelab
+  word_document: default
+bibliography: '`r here::here("refs", "references.bib")`'
+---
+
+
+![](`r here::here("pics", "58M.png")`)
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      message = FALSE,
+                      warning = FALSE)
+```
+
+```{r pkgs, include = FALSE}
+library(tidyverse)
+```
+
+All the packages mentiond here already installed on the University network
+
+
+# Protein Structure
+
+Read and process pdb files from the [Protein Data Bank](https://www.rcsb.org/) 
+
+* Package: [Bio3d](http://thegrantlab.org/bio3d/index.php)  
+* [Bio3D tutorials](http://thegrantlab.org/bio3d/tutorials) 
+
+# Sequences
+
+ Import and analyse fasta files.
+ 
+* Package: [seqinr](https://www.rdocumentation.org/packages/seqinr/versions/3.4-5)
+* Covers using seqin: [Applied statistics for bioinformatics using R by Krijnen](https://cran.r-project.org/doc/contrib/Krijnen-IntroBioInfStatistics.pdf)
+* Huge package which includes workflows [Bioconductor](https://www.bioconductor.org/)
+* An example workflow [Introduction to Bioconductor for Sequence Data](https://www.bioconductor.org/help/workflows/sequencing/) with  [overview](https://master.bioconductor.org/packages/release/workflows/vignettes/sequencing/inst/doc/sequencing.html)
+
+# Image analysis
+
+mage processing and analysis. In the context of (high-throughput) microscopy-based cellular assays, EBImage offers tools to segment cells and extract quantitative cellular descriptors.
+
+* Package: [EBImage](http://bioconductor.org/packages/release/bioc/html/EBImage.html)
+* A tutorial [Basics of image data and spatial patterns analysis in R](https://bioconductor.org/help/course-materials/2015/BioC2015/BioC2015Oles.html#38/)
+
+# Literature Analysis
+
+Search for open access articles, download those articles in full text if available, convert pdf format to plain text, and extract text chunks for vizualization/analysis
+
+* Package: [fulltext](https://github.com/ropensci/fulltext)  
+* [fulltext vignette](https://ropensci.org/tutorials/fulltext_tutorial/)
+
+
+
+
+# The Rmd file
+
+[Rmd file](07_project_resources.Rmd)
+
+
+
+![](`r here::here("pics", "58Mend.png")`)
+
+
